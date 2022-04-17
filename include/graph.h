@@ -1,6 +1,8 @@
 #include <unordered_map>
 #include <list>
 
+#include <boost/functional/hash.hpp>
+
 enum class EdgeSide {
     FIRST, SECOND
 };
@@ -13,27 +15,28 @@ public:
     void remove_vertex(const V&);
     void remove_edge(const V&, const V&);
 private:
+    struct VertexInfo;
     struct EdgeInfo;
+    
+    std::unordered_map<V, VertexInfo> vertices;
+    std::unordered_map<std::pair<V, V>, EdgeInfo, boost::hash<std::pair<V, V>>> edges;
     
     struct VertexInfo {
 	unsigned deg;
 	std::list<
 	    std::tuple<
 		EdgeSide,
-		typename std::list<EdgeInfo>::iterator,
+		std::pair<V, V>,
 		V
 		>
-	    > edges;
+	    > vertex_edges;
     };
 
     struct EdgeInfo {
 	E e;
-	typename decltype(VertexInfo::edges)::iterator first;
-	typename decltype(VertexInfo::edges)::iterator second;
+	typename decltype(VertexInfo::vertex_edges)::iterator first;
+	typename decltype(VertexInfo::vertex_edges)::iterator second;
     };
-    
-    std::unordered_map<V, VertexInfo> vertices;
-    std::list<EdgeInfo> edges;
 };
 
 template <typename V, typename E>
@@ -43,18 +46,18 @@ void Graph<V, E>::insert_vertex(const V& v) {
 
 template <typename V, typename E>
 void Graph<V, E>::insert_edge(const E& e, const V& v1, const V& v2) {
-    edges.emplace_back(e, {}, {});
+    edges.emplace({v1, v2}, {e, {}, {}});
     ++vertices.at(v1).deg;
-    vertices.at(v1).edges.emplace_back(EdgeSide::FIRST, edges.back(), v1);
+    vertices.at(v1).vertex_edges.emplace_back(EdgeSide::FIRST, edges.at({v1, v2}), v1);
     ++vertices.at(v2).deg;
-    vertices.at(v2).edges.emplace_back(EdgeSide::SECOND, edges.back(), v2);
-    edges.back()->first = vertices.at(v1).edges.back();
-    edges.back()->second = vertices.at(v2).edges.back();
+    vertices.at(v2).vertex_edges.emplace_back(EdgeSide::SECOND, edges.at({v1, v2}), v2);
+    edges.at({v1, v2})->first = vertices.at(v1).vertex_edges.back();
+    edges.at({v1, v2})->second = vertices.at(v2).vertex_edges.back();
 }
 
 template <typename V, typename E>
 void Graph<V, E>::remove_vertex(const V& v) {
-    for (auto it = vertices.at(v).edges.front(); it != vertices.at(v).edges.end(); ++it) {
+    for (auto it = vertices.at(v).vertex_edges.front(); it != vertices.at(v).vertex_edges.end(); ++it) {
 	edges.erase(std::get<1>(*it));
     }
     vertices.erase(v);
