@@ -1,4 +1,4 @@
-#include <unordered_map>
+#include <vector>
 #include <list>
 
 template <typename V, typename E>
@@ -10,11 +10,12 @@ private:
     struct EdgeInfo;
     
     struct VertexInfo {
+	V v;
 	unsigned deg;
 	std::list<
 	    std::pair<
 		typename std::list<EdgeInfo>::iterator,
-		typename std::unordered_map<V, VertexInfo>::iterator
+		typename std::vector<VertexInfo>::iterator
 		>
 	    > edge;
     };
@@ -25,6 +26,6 @@ private:
 	typename decltype(VertexInfo::edge)::iterator second;
     };
     
-    std::unordered_map<V, VertexInfo> vertices;
+    std::vector<VertexInfo> vertices;
     std::list<EdgeInfo> edges;
 };

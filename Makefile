@@ -11,8 +11,6 @@ main: build/main.o build/graph.o
 	$(LD) -o $@ $^ $(L_FLAGS)
 build/main.o: src/main.cc
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
-build/graph.o: src/graph.cc include/graph.h
-	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 exe: main
 	./main
