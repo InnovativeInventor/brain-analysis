@@ -7,7 +7,7 @@ CXX_FLAGS=-g -std=c++20 -Ofast -flto -fno-signed-zeros -fno-trapping-math -frena
 
 L_FLAGS=-L/usr/lib/x86_64-linux-gnu -flto
 
-main: build/main.o build/graph.o
+main: build/main.o
 	$(LD) -o $@ $^ $(L_FLAGS)
 build/main.o: src/main.cc include/graph.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
