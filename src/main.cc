@@ -1,42 +1,15 @@
 #include <iostream>
 
+#include "brain_serde.h"
 #include "graph.h"
 
 int main(int argc, char** argv) {
-    Graph<std::size_t, double> graph;
-    graph.insert_vertex(0);
-    graph.insert_vertex(1);
-    graph.insert_vertex(2);
-    graph.insert_edge(4.0, 0, 1);
-    graph.insert_edge(8.0, 0, 2);
+    auto voxels = read_in_voxels("data/coords.txt");
 
-    auto edge1 = graph.are_adjacent(0, 1);
-    auto edge2 = graph.are_adjacent(0, 2);
-    auto edge3 = graph.are_adjacent(1, 2);
-
-    std::cout << "Section\n";
-    if (edge1) std::cout << "Edge 1 has value " << edge1.value() << "\n";
-    if (edge2) std::cout << "Edge 2 has value " << edge2.value() << "\n";
-    if (edge3) std::cout << "Edge 3 has value " << edge3.value() << "\n";
-
-    graph.insert_edge(12.0, 1, 2);
-    graph.remove_edge(0, 1);
-
-    edge1 = graph.are_adjacent(0, 1);
-    edge2 = graph.are_adjacent(0, 2);
-    edge3 = graph.are_adjacent(1, 2);
-
-    std::cout << "Section\n";
-    if (edge1) std::cout << "Edge 1 has value " << edge1.value() << "\n";
-    if (edge2) std::cout << "Edge 2 has value " << edge2.value() << "\n";
-    if (edge3) std::cout << "Edge 3 has value " << edge3.value() << "\n";
-
-    graph.remove_vertex(0);
-
-    edge3 = graph.are_adjacent(1, 2);
-
-    std::cout << "Section\n";
-    if (edge3) std::cout << "Edge 3 has value " << edge3.value() << "\n";
+    std::cout << voxels.size() << "\n";
+    for (auto [re, vs] : voxels) {
+	std::cout << re << " " << vs.size() << "\n";
+    }
 
     return 0;
 }

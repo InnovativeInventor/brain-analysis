@@ -7,9 +7,11 @@ CXX_FLAGS=-g -std=c++20 -Ofast -flto -fno-signed-zeros -fno-trapping-math -frena
 
 L_FLAGS=-L/usr/lib/x86_64-linux-gnu -flto
 
-main: build/main.o
+main: build/main.o build/brain_serde.o
 	$(LD) -o $@ $^ $(L_FLAGS)
-build/main.o: src/main.cc include/graph.h
+build/main.o: src/main.cc include/graph.h include/brain_serde.h
+	$(CXX) $(CXX_FLAGS) -c -o $@ $<
+build/brain_serde.o: src/brain_serde.cc include/brain_serde.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 exe: main

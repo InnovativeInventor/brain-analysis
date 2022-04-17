@@ -20,7 +20,7 @@ private:
     struct VertexInfo;
     struct EdgeInfo;
     
-    std::unordered_map<V, VertexInfo> vertices;
+    std::unordered_map<V, VertexInfo, boost::hash<V>> vertices;
     std::unordered_map<std::pair<V, V>, EdgeInfo, boost::hash<std::pair<V, V>>> edges;
 
     struct VertexInfoEdgeMember {
