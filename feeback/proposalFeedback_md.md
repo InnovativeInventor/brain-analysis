@@ -28,3 +28,9 @@ Here you say you will do CSE and then say you will be doing GVN. These are relat
 
 This appears to be a plan to do register allocation with graph coloring. That is a classic solution and would be ok but without a discussion of the target and IR it is impossible to understand what you are going to do. It also includes an more interesting problem of computing live ranges. In fact computing live ranges and then register allocation would be a reasonable pair of algorithms with the correct leading question.
 
+
+
+
+### Regrade
+
+Given the updates to your proposal and our emails about it you have been approved and I am glad to see you starting to work. I have given you 90 on the regrade since you are still a bit sketchy with the details of how you are mapping the data to the graph. That being said based on the information you provided I am pretty confident you understand what you are doing in this case.
