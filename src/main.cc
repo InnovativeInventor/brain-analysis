@@ -6,7 +6,19 @@
 int main(int argc, char** argv) {
     auto voxels = read_in_voxels("data/coords.txt");
     auto edges = read_in_edges("data/img_edge_list.txt");
-    std::cout << edges.size() << " " << edges.at(0).v1 << " " << edges.at(0).v2 << " " << edges.at(0).e << "\n";
+
+    Graph<std::size_t, double> graph;
+
+    for (Voxel voxel : voxels) {
+	graph.insert_vertex(voxel.index);
+    }
+
+    for (Edge edge : edges) {
+	graph.insert_edge(edge.e, voxels.at(edge.v1).index, voxels.at(edge.v2).index);
+	graph.insert_edge(edge.e, voxels.at(edge.v2).index, voxels.at(edge.v1).index);
+    }
+
+    std::cout << graph.num_vertices() << " " << graph.num_edges() << "\n";
 
     return 0;
 }

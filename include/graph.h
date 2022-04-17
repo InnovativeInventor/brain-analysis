@@ -16,6 +16,8 @@ public:
     void remove_vertex(const V&);
     void remove_edge(const V&, const V&);
     std::optional<E> are_adjacent(const V&, const V&);
+    std::size_t num_vertices() { return vertices.size(); }
+    std::size_t num_edges() { return edges.size(); }
 private:
     struct VertexInfo;
     struct EdgeInfo;
