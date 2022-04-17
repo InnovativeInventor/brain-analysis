@@ -64,6 +64,9 @@ void Graph<V, E>::remove_vertex(const V& v) {
 }
 
 template <typename V, typename E>
-void Graph<V, E>::remove_edge(const V&, const V&) {
-
+void Graph<V, E>::remove_edge(const V& v1, const V& v2) {
+    const auto& edge = edges.at({v1, v2});
+    vertices.at(v1).erase(edge.first);
+    vertices.at(v2).erase(edge.second);
+    edges.erase({v1, v2});
 }
