@@ -1,4 +1,5 @@
 #include <unordered_map>
+#include <optional>
 #include <list>
 
 #include <boost/functional/hash.hpp>
@@ -14,6 +15,7 @@ public:
     void insert_edge(const E&, const V&, const V&);
     void remove_vertex(const V&);
     void remove_edge(const V&, const V&);
+    std::optional<E> are_adjacent(const V&, const V&);
 private:
     struct VertexInfo;
     struct EdgeInfo;
@@ -57,8 +59,8 @@ void Graph<V, E>::insert_edge(const E& e, const V& v1, const V& v2) {
 
 template <typename V, typename E>
 void Graph<V, E>::remove_vertex(const V& v) {
-    for (auto it = vertices.at(v).vertex_edges.front(); it != vertices.at(v).vertex_edges.end(); ++it) {
-	edges.erase(std::get<1>(*it));
+    for (auto ve : vertices.at(v).vertex_edges) {
+	edges.erase(std::get<1>(ve));
     }
     vertices.erase(v);
 }
@@ -71,4 +73,14 @@ void Graph<V, E>::remove_edge(const V& v1, const V& v2) {
     --vertices.at(v2).deg;
     vertices.at(v2).vertex_edges.erase(edge->second);
     edges.erase({v1, v2});
+}
+
+template <typename V, typename E>
+std::optional<E> Graph<V, E>::are_adjacent(const V& v1, const V& v2) {
+    std::swap(v1, v2);
+    if (vertices.at(v2).deg > vertices.at(v1).deg) std::swap(v1, v2);
+    for (auto ve : vertices.at(v1).vertex_edges) {
+	if (std::get<1>(ve) == std::make_pair(v1, v2)) return edges.at({v1, v2}).e;
+    }
+    return {};
 }
