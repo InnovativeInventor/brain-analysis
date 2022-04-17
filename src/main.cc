@@ -5,11 +5,8 @@
 
 int main(int argc, char** argv) {
     auto voxels = read_in_voxels("data/coords.txt");
-
-    std::cout << voxels.size() << "\n";
-    for (auto [re, vs] : voxels) {
-	std::cout << re << " " << vs.size() << "\n";
-    }
+    auto edges = read_in_edges("data/img_edge_list.txt");
+    std::cout << edges.size() << " " << edges.at(0).v1 << " " << edges.at(0).v2 << " " << edges.at(0).e << "\n";
 
     return 0;
 }
