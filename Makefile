@@ -9,7 +9,7 @@ L_FLAGS=-L/usr/lib/x86_64-linux-gnu -flto
 
 main: build/main.o build/graph.o
 	$(LD) -o $@ $^ $(L_FLAGS)
-build/main.o: src/main.cc
+build/main.o: src/main.cc include/graph.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 exe: main
