@@ -1,3 +1,5 @@
+#pragma once
+
 #include <unordered_map>
 #include <optional>
 #include <list>
@@ -13,6 +15,7 @@ class Graph {
 public:
     void insert_vertex(const V&);
     void insert_edge(const E&, const V&, const V&);
+    void insert_directed_edge(const E&, const V&, const V&);
     void remove_vertex(const V&);
     void remove_edge(const V&, const V&);
     std::optional<E> are_adjacent(const V&, const V&);
@@ -50,10 +53,14 @@ void Graph<V, E>::insert_vertex(const V& v) {
 
 template <typename V, typename E>
 void Graph<V, E>::insert_edge(const E& e, const V& v1, const V& v2) {
+    insert_directed_edge(e, v1, v2);
+    insert_directed_edge(e, v2, v1);
+}
+
+template <typename V, typename E>
+void Graph<V, E>::insert_directed_edge(const E& e, const V& v1, const V& v2) {
     ++vertices.at(v1).deg;
     vertices.at(v1).vertex_edges.push_front(VertexInfoEdgeMember{EdgeSide::FIRST, {v1, v2}, v1});
-    ++vertices.at(v2).deg;
-    vertices.at(v2).vertex_edges.push_front(VertexInfoEdgeMember{EdgeSide::SECOND, {v1, v2}, v2});
     edges.insert({{v1, v2}, EdgeInfo{e, vertices.at(v1).vertex_edges.begin(), vertices.at(v2).vertex_edges.begin()}});
 }
 
