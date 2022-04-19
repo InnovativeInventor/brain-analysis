@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <optional>
 #include <list>
-#include <concepts>
 
 #include <boost/functional/hash.hpp>
 
@@ -19,12 +18,17 @@ public:
     void insert_directed_edge(const E&, const V&, const V&);
     void remove_vertex(const V&);
     void remove_edge(const V&, const V&);
+    unsigned degree(const V&);
+    
     std::optional<E> get_edge(const V&, const V&);
     std::size_t num_vertices() { return vertices.size(); }
     std::size_t num_edges() { return edges.size(); }
 
-    void normalize() { } // TODO
-    void normalize_edge_weights(const V& v);
+    void map_vertices(std::function<void (V& v)> func);
+    void map_edges(std::function<void (E& e)> func);
+
+    void normalize();
+    std::unordered_map<V, E> rank(int rounds, E damping);
 
 private:
     struct VertexInfo;
@@ -36,7 +40,6 @@ private:
     struct VertexInfoEdgeMember {
 	EdgeSide es;
 	std::pair<V, V> edge_label;
-	V v;
     };
     
     struct VertexInfo {
@@ -49,6 +52,8 @@ private:
 	typename std::list<VertexInfoEdgeMember>::iterator first;
 	typename std::list<VertexInfoEdgeMember>::iterator second;
     };
+
+    void normalize_edge_weights(const V& v);
 };
 
 template <typename V, typename E>
@@ -65,7 +70,7 @@ void Graph<V, E>::insert_edge(const E& e, const V& v1, const V& v2) {
 template <typename V, typename E>
 void Graph<V, E>::insert_directed_edge(const E& e, const V& v1, const V& v2) {
     ++vertices.at(v1).deg;
-    vertices.at(v1).vertex_edges.push_front(VertexInfoEdgeMember{EdgeSide::FIRST, {v1, v2}, v1});
+    vertices.at(v1).vertex_edges.push_front(VertexInfoEdgeMember{EdgeSide::FIRST, {v1, v2}});
     edges.insert({{v1, v2}, EdgeInfo{e, vertices.at(v1).vertex_edges.begin(), vertices.at(v2).vertex_edges.begin()}});
 }
 
@@ -88,10 +93,29 @@ void Graph<V, E>::remove_edge(const V& v1, const V& v2) {
 }
 
 template <typename V, typename E>
+unsigned Graph<V, E>::degree(const V& v) {
+    return vertices.at(v).deg;
+}
+
+template <typename V, typename E>
 std::optional<E> Graph<V, E>::get_edge(const V& v1, const V& v2) {
     auto& to_check = vertices.at(v1).deg < vertices.at(v2).deg ? v1 : v2;
     for (auto ve : vertices.at(to_check).vertex_edges) {
 	if (ve.edge_label == std::make_pair(v1, v2)) return edges.at({v1, v2}).e;
     }
     return {};
+}
+
+template <typename V, typename E>
+void Graph<V, E>::map_vertices(std::function<void (V& v)> func) {
+    for (auto& v : vertices) {
+	func(v.first);
+    }
+}
+
+template <typename V, typename E>
+void Graph<V, E>::map_edges(std::function<void (E& e)> func) {
+    for (auto& e : edges) {
+	func(e.e);
+    }
 }
