@@ -15,7 +15,6 @@ int main(int argc, char** argv) {
 
     for (Edge edge : edges) {
 	graph.insert_edge(edge.e, voxels.at(edge.v1).index, voxels.at(edge.v2).index);
-	graph.insert_edge(edge.e, voxels.at(edge.v2).index, voxels.at(edge.v1).index);
     }
 
     std::cout << graph.num_vertices() << " " << graph.num_edges() << "\n";
