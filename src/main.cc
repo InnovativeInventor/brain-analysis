@@ -2,6 +2,7 @@
 
 #include "brain_serde.h"
 #include "graph.h"
+#include "rank.h"
 
 int main(int argc, char** argv) {
     auto voxels = read_in_voxels("data/coords.txt");
@@ -15,6 +16,10 @@ int main(int argc, char** argv) {
 
     for (Edge edge : edges) {
 	graph.insert_edge(edge.e, voxels.at(edge.v1).index, voxels.at(edge.v2).index);
+    }
+
+    for (Voxel voxel : voxels) {
+        graph.normalize_edge_weights(voxel.index);
     }
 
     std::cout << graph.num_vertices() << " " << graph.num_edges() << "\n";

@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <optional>
 #include <list>
+#include <concepts>
 
 #include <boost/functional/hash.hpp>
 
@@ -18,9 +19,13 @@ public:
     void insert_directed_edge(const E&, const V&, const V&);
     void remove_vertex(const V&);
     void remove_edge(const V&, const V&);
-    std::optional<E> are_adjacent(const V&, const V&);
+    std::optional<E> get_edge(const V&, const V&);
     std::size_t num_vertices() { return vertices.size(); }
     std::size_t num_edges() { return edges.size(); }
+
+    void normalize() { } // TODO
+    void normalize_edge_weights(const V& v);
+
 private:
     struct VertexInfo;
     struct EdgeInfo;
@@ -83,7 +88,7 @@ void Graph<V, E>::remove_edge(const V& v1, const V& v2) {
 }
 
 template <typename V, typename E>
-std::optional<E> Graph<V, E>::are_adjacent(const V& v1, const V& v2) {
+std::optional<E> Graph<V, E>::get_edge(const V& v1, const V& v2) {
     auto& to_check = vertices.at(v1).deg < vertices.at(v2).deg ? v1 : v2;
     for (auto ve : vertices.at(to_check).vertex_edges) {
 	if (ve.edge_label == std::make_pair(v1, v2)) return edges.at({v1, v2}).e;
