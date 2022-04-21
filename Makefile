@@ -3,9 +3,9 @@ LD=clang++
 
 W_FLAGS=-pedantic -Wall -Wextra
 
-CXX_FLAGS=-g -std=c++17 -Ofast -Iinclude $(W_FLAGS)
+CXX_FLAGS=-g -std=c++17 -stdlib=libc++ -Ofast -Iinclude $(W_FLAGS)
 
-L_FLAGS=-flto
+L_FLAGS=-stdlib=libc++ -lc++abi
 
 main: build/main.o build/brain_serde.o
 	$(LD) -o $@ $^ $(L_FLAGS)
