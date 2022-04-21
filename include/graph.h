@@ -1,13 +1,16 @@
 #pragma once
 
 #include <unordered_map>
+#include <functional>
 #include <optional>
+#include <utility>
 #include <list>
 
-#include <boost/functional/hash.hpp>
-
-enum class EdgeSide {
-    FIRST, SECOND
+struct custom_hash {
+    template <typename V1, typename V2>
+    std::size_t operator() (const std::pair<V1, V2>& pair) const {
+	return std::hash<V1>()(pair.first) ^ std::hash<V2>()(pair.second);
+    }
 };
 
 template <typename V, typename E>
@@ -34,23 +37,18 @@ private:
     struct VertexInfo;
     struct EdgeInfo;
     
-    std::unordered_map<V, VertexInfo, boost::hash<V>> vertices;
-    std::unordered_map<std::pair<V, V>, EdgeInfo, boost::hash<std::pair<V, V>>> edges;
-
-    struct VertexInfoEdgeMember {
-	EdgeSide es;
-	std::pair<V, V> edge_label;
-    };
+    std::unordered_map<V, VertexInfo> vertices;
+    std::unordered_map<std::pair<V, V>, EdgeInfo, custom_hash> edges;
     
     struct VertexInfo {
         unsigned deg;
-	std::list<VertexInfoEdgeMember> vertex_edges;
+	std::list<std::pair<V, V>> vertex_edges;
     };
 
     struct EdgeInfo {
 	E e;
-	typename std::list<VertexInfoEdgeMember>::iterator first;
-	typename std::list<VertexInfoEdgeMember>::iterator second;
+	typename std::list<std::pair<V, V>>::iterator first;
+	typename std::list<std::pair<V, V>>::iterator second;
     };
 
     void normalize_edge_weights(const V& v);
@@ -70,7 +68,7 @@ void Graph<V, E>::insert_edge(const E& e, const V& v1, const V& v2) {
 template <typename V, typename E>
 void Graph<V, E>::insert_directed_edge(const E& e, const V& v1, const V& v2) {
     ++vertices.at(v1).deg;
-    vertices.at(v1).vertex_edges.push_front(VertexInfoEdgeMember{EdgeSide::FIRST, {v1, v2}});
+    vertices.at(v1).vertex_edges.push_front({v1, v2});
     edges.insert({{v1, v2}, EdgeInfo{e, vertices.at(v1).vertex_edges.begin(), vertices.at(v2).vertex_edges.begin()}});
 }
 

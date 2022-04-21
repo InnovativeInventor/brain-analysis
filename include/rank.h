@@ -14,12 +14,12 @@ void Graph<V, E>::normalize_edge_weights(const V& v) {
     auto sum = E();
 
     for (auto ve : vertices.at(v).vertex_edges) {
-	auto& edge = edges.at({ve.edge_label.first, ve.edge_label.second});
+	auto& edge = edges.at({ve.first, ve.second});
 	sum += edge.e;
     }
 
     for (auto ve : vertices.at(v).vertex_edges) {
-	auto& edge = edges.at({ve.edge_label.first, ve.edge_label.second});
+	auto& edge = edges.at({ve.first, ve.second});
 	edge.e /= sum;
     }
 }
@@ -47,12 +47,12 @@ std::unordered_map<V, E> Graph<V, E>::rank(int rounds, E damping) {
 	for (auto& [_, vertex_info] : vertices) {
 	    auto sum = E();
 	    for (auto ve : vertex_info.vertex_edges) {
-	        auto& edge = edges.at({ve.edge_label.first, ve.edge_label.second});
+	        auto& edge = edges.at({ve.first, ve.second});
 		sum += edge.e;
 	    }
 	    for (auto ve : vertex_info.vertex_edges) {
-	        auto& edge = edges.at({ve.edge_label.first, ve.edge_label.second});
-		ranks.at(ve.edge_label.second) += edge.e / sum;
+	        auto& edge = edges.at({ve.first, ve.second});
+		ranks.at(ve.second) += edge.e / sum;
 	    }
 	}
 	for (auto& [_, e] : ranks) {
