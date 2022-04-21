@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 	graph.insert_edge(edge.e, voxels.at(edge.v1).index, voxels.at(edge.v2).index);
     }
 
-    graph.normalize(); // for pagerank
+    graph.normalize();
 
     auto ranks = graph.rank(100, 0.85);
 
