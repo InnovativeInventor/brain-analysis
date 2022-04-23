@@ -13,11 +13,13 @@ build/main.o: src/main.cc include/graph.h include/brain_serde.h include/rank.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 build/brain_serde.o: src/brain_serde.cc include/brain_serde.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
-test: tests/catch.o tests/tests.o
+test: build/catch.o build/serde.o build/pagerank-cycle.o build/brain_serde.o
 	$(LD) -o $@ $^ $(L_FLAGS)
-tests/catch.o: tests/tests-main.cc
+build/catch.o: tests/tests-main.cc
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
-tests/tests.o: tests/pagerank-cycle.cc tests/serde.cc
+build/serde.o: tests/serde.cc include/brain_serde.h
+	$(CXX) $(CXX_FLAGS) -c -o $@ $<
+build/pagerank-cycle.o: tests/pagerank-cycle.cc
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 exe: main

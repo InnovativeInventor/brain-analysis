@@ -12,11 +12,25 @@ struct Voxel {
     double z;
 };
 
+inline bool operator==(const Voxel& v1, const Voxel& v2) {
+    return v1.index == v2.index
+	&& v1.region == v2.region
+	&& v1.x == v2.x
+	&& v1.y == v2.y
+	&& v1.z == v2.z;
+}
+
 struct Edge {
     std::size_t v1;
     std::size_t v2;
     double e;
 };
+
+inline bool operator==(const Edge& e1, const Edge& e2) {
+    return e1.v1 == e2.v1
+	&& e1.v2 == e2.v2
+	&& e1.e == e2.e;
+}
 
 std::vector<Voxel> read_in_voxels(const std::string& file_name);
 
