@@ -22,10 +22,12 @@ tests/tests.o: tests/pagerank.cc tests/serde.cc
 
 exe: main
 	./main
+exe_test: test
+	./test
 
 clean:
 	rm -rf build/*.o
 	rm -rf main
 	rm -rf test
 
-.PHONY: clean, exe
+.PHONY: clean, exe, exe_test
