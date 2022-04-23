@@ -1,7 +1,8 @@
 #include "catch.hpp"
+
+#include "utils.h"
 #include "graph.h"
 #include "rank.h"
-#include <iostream>
 
 Graph<std::size_t, double> construct_cycle_digraph(size_t cycle_size, double weight) {
   Graph<std::size_t, double> graph;
@@ -81,7 +82,7 @@ TEST_CASE( "Cycle graph is vertex-transitive with pagerank", "[pagerank][sym_cyc
 
   auto first_rank = ranks[0];
   for (auto& [v, e]: ranks) {
-    REQUIRE (e == first_rank);
+    REQUIRE_SIMILAR (e, first_rank);
   }
 }
 
@@ -97,6 +98,6 @@ TEST_CASE( "Cycle digraph is vertex-transitive with pagerank", "[pagerank][sym_c
 
   auto first_rank = ranks[0];
   for (auto& [v, e]: ranks) {
-    REQUIRE (e == first_rank);
+    REQUIRE_SIMILAR (e, first_rank);
   }
 }

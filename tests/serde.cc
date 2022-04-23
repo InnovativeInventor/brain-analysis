@@ -1,4 +1,5 @@
 #include "catch.hpp"
+
 #include "brain_serde.hpp"
 
 TEST_CASE( "Dataset readable", "[graph][io]" ) {
