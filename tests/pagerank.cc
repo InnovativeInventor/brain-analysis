@@ -2,21 +2,78 @@
 #include "graph.h"
 #include "rank.h"
 
-TEST_CASE( "Graph is constructable", "[graph][construction]" ) {
+Graph<std::size_t, double> construct_cycle_digraph(size_t cycle_size, double weight) {
   Graph<std::size_t, double> graph;
 
   REQUIRE (graph.num_vertices() == 0);
   REQUIRE (graph.num_edges() == 0);
 
-  for (size_t i = 0; i < 10; i++) {
+  for (size_t i = 0; i < cycle_size; i++) {
     graph.insert_vertex(i);
 
     REQUIRE (graph.num_vertices() == i+1);
+  }
+
+  for (size_t i = 0; i < cycle_size-1; i++) {
     REQUIRE (graph.num_edges() == i);
 
-    graph.insert_directed_edge(0.0, 0, i);
+    graph.insert_directed_edge(weight, i, i+1);
 
     REQUIRE (graph.num_edges() == i+1);
   }
+
+  graph.insert_directed_edge(weight, cycle_size-1, 0);
+
+  return graph;
 }
 
+Graph<std::size_t, double> construct_cycle_graph(size_t cycle_size, double weight) {
+  Graph<std::size_t, double> graph;
+
+  REQUIRE (graph.num_vertices() == 0);
+  REQUIRE (graph.num_edges() == 0);
+
+  for (size_t i = 0; i < cycle_size; i++) {
+    graph.insert_vertex(i);
+
+    REQUIRE (graph.num_vertices() == i+1);
+  }
+
+  for (size_t i = 0; i < cycle_size-1; i++) {
+    REQUIRE (graph.num_edges() == i*2);
+
+    graph.insert_edge(weight, i, i+1);
+
+    REQUIRE (graph.num_edges() == (i+1)*2);
+  }
+
+  graph.insert_edge(weight, cycle_size-1, 0);
+
+  return graph;
+}
+
+TEST_CASE( "Cycle digraph is constructable", "[graph][construction]" ) {
+  size_t cycle_size = GENERATE(10, 100);
+  double weight = GENERATE(0.0, 0.5, 1.0);
+  construct_cycle_digraph(cycle_size, weight);
+}
+
+TEST_CASE( "Cycle graph is constructable with insert_edge()", "[graph][insert_edge]" ) {
+  size_t cycle_size = GENERATE(10, 100);
+  double weight = GENERATE(0.0, 0.5, 1.0);
+  construct_cycle_graph(cycle_size, weight);
+}
+
+TEST_CASE( "Cycle digraph pagerank even", "[pagerank][sym_cycle_graph]" ) {
+  size_t cycle_size = GENERATE(10, 100);
+  double weight = GENERATE(0.0, 0.5, 1.0);
+  auto graph = construct_cycle_graph(cycle_size, weight);
+
+  graph.normalize();
+  auto ranks = graph.rank(100, 0.85);
+
+  auto first_rank = ranks[0];
+  for (auto& [v, e]: ranks) {
+    REQUIRE (e == first_rank);
+  }
+}
