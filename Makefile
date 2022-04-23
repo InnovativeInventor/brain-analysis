@@ -17,7 +17,7 @@ test: tests/catch.o tests/tests.o
 	$(LD) -o $@ $^ $(L_FLAGS)
 tests/catch.o: tests/tests-main.cc
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
-tests/tests.o: tests/pagerank.cc tests/serde.cc
+tests/tests.o: tests/pagerank-cycle.cc tests/serde.cc
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 exe: main
