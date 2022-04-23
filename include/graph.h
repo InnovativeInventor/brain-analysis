@@ -113,7 +113,7 @@ void Graph<V, E>::map_vertices(std::function<void (V& v)> func) {
 
 template <typename V, typename E>
 void Graph<V, E>::map_edges(std::function<void (E& e)> func) {
-    for (auto& e : edges) {
+    for (auto& [_, e] : edges) {
 	func(e.e);
     }
 }

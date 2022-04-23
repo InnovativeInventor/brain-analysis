@@ -27,9 +27,10 @@ void Graph<V, E>::normalize_edge_weights(const V& v) {
 template <typename V, typename E> // E must be floating point
 std::unordered_map<V, E> Graph<V, E>::rank(int rounds, E damping) {
     size_t size = vertices.size();
-    std::unordered_map<V, E> ranks, sums;
+    std::unordered_map<V, E> ranks_1, ranks_2, sums;
     for (auto [vertex, vertex_info] : vertices) {
-	ranks.insert({vertex, 1.0 / static_cast<E>(size)});
+	ranks_1.insert({vertex, static_cast<E>(1.0) / static_cast<E>(size)});
+	ranks_2.insert({vertex, static_cast<E>(0.0)});
 
 	auto sum = E();
 	for (auto ve : vertex_info.vertex_edges) {
@@ -43,10 +44,11 @@ std::unordered_map<V, E> Graph<V, E>::rank(int rounds, E damping) {
 	for (auto& [vertex, vertex_info] : vertices) {
 	    for (auto ve : vertex_info.vertex_edges) {
 	        auto& edge = edges.at({ve.first, ve.second});
-		ranks.at(ve.second) = (1.0 - damping) + damping * (ranks.at(ve.first) * edge.e / sums.at(vertex));
+		ranks_2.at(ve.second) = (1.0 - damping) + damping * (ranks_1.at(ve.first) * edge.e / sums.at(vertex));
 	    }
 	}
+	std::swap(ranks_1, ranks_2);
     }
 
-    return ranks;
+    return ranks_1;
 }
