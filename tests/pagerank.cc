@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "graph.h"
 #include "rank.h"
+#include <iostream>
 
 Graph<std::size_t, double> construct_cycle_digraph(size_t cycle_size, double weight) {
   Graph<std::size_t, double> graph;
@@ -82,7 +83,6 @@ TEST_CASE( "Cycle graph is vertex-transitive with pagerank", "[pagerank][sym_cyc
   }
 }
 
-/*
 TEST_CASE( "Cycle digraph is vertex-transitive with pagerank", "[pagerank][sym_cycle_digraph]" ) {
   size_t cycle_size = GENERATE(10, 100);
   double weight = GENERATE(0.0, 0.5, 1.0);
@@ -96,4 +96,3 @@ TEST_CASE( "Cycle digraph is vertex-transitive with pagerank", "[pagerank][sym_c
     REQUIRE (e == first_rank);
   }
 }
-*/
