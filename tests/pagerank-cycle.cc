@@ -91,7 +91,7 @@ TEST_CASE( "Cycle graph is vertex-transitive with pagerank", "[pagerank][sym_cyc
 // should also reflect this symmetry. 
 TEST_CASE( "Cycle digraph is vertex-transitive with pagerank", "[pagerank][sym_cycle_digraph]" ) {
     size_t cycle_size = GENERATE(10, 100);
-    double weight = GENERATE(0.0, 0.5, 1.0);
+    double weight = GENERATE(0.1, 0.5, 1.0);
     auto graph = construct_cycle_digraph(cycle_size, weight);
 
     graph.normalize();
@@ -99,8 +99,7 @@ TEST_CASE( "Cycle digraph is vertex-transitive with pagerank", "[pagerank][sym_c
     auto ranks = graph.rank(100, 0.85);
 
     auto first_rank = ranks[0];
-    for (auto& [v, e]: ranks) {
-	std::cout << e << std::endl;
+    for (auto& [_, e]: ranks) {
 	REQUIRE_SIMILAR (e, first_rank);
     }
 }
