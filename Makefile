@@ -13,6 +13,12 @@ build/main.o: src/main.cc include/graph.h include/brain_serde.h include/rank.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 build/brain_serde.o: src/brain_serde.cc include/brain_serde.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
+test: tests/catch.o tests/tests.o
+	$(LD) -o $@ $^ $(L_FLAGS)
+tests/catch.o: tests/tests-main.cc
+	$(CXX) $(CXX_FLAGS) -c -o $@ $<
+tests/tests.o: tests/pagerank.cc tests/serde.cc
+	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 exe: main
 	./main
@@ -20,5 +26,6 @@ exe: main
 clean:
 	rm -rf build/*.o
 	rm -rf main
+	rm -rf test
 
 .PHONY: clean, exe
