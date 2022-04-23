@@ -85,7 +85,6 @@ TEST_CASE( "Cycle graph is vertex-transitive with pagerank", "[pagerank][sym_cyc
 	REQUIRE_SIMILAR (e, first_rank);
     }
 }
-#include<iostream>
 
 // The directed cycle graph is also vertex-transitive, so the pagerank value of each vertex
 // should also reflect this symmetry. 

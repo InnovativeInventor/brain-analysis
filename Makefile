@@ -20,7 +20,7 @@ build/catch.o: tests/tests-main.cc
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 build/serde.o: tests/serde.cc include/brain_serde.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
-build/pagerank-cycle.o: tests/pagerank-cycle.cc include/graph.h include/rank.h
+build/pagerank-cycle.o: tests/pagerank-cycle.cc include/graph.h include/rank.h tests/utils.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 exe: main
