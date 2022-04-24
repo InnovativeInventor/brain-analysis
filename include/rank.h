@@ -41,11 +41,17 @@ std::unordered_map<V, E> Graph<V, E>::rank(int rounds, E damping) {
     }
 
     for (int i = 0; i < rounds; ++i) {
+	for (auto& [_, r] : ranks_2) {
+	    r = 0.0;
+	}
 	for (auto& [vertex, vertex_info] : vertices) {
 	    for (auto ve : vertex_info.vertex_edges) {
 	        auto& edge = edges.at({ve.first, ve.second});
-		ranks_2.at(ve.second) = (1.0 - damping) + damping * (ranks_1.at(ve.first) * edge.e / sums.at(vertex));
+		ranks_2.at(ve.second) += ranks_1.at(ve.first) * edge.e / sums.at(vertex);
 	    }
+	}
+	for (auto& [_, r] : ranks_2) {
+	    r = damping * r + 1.0 - damping;
 	}
 	std::swap(ranks_1, ranks_2);
     }
