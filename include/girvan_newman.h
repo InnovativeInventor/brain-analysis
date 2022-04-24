@@ -187,7 +187,24 @@ double Graph<V, E>::modularity(Graph<V,E> & updated_g){
 // main girvan_newman algorithm.
 template <typename V, typename E>
 Graph<V,E> * Graph<V,E>::girvan_newman(){
-
+    Graph<V, E> copy_graph;
+    copy_graph.vertices = vertices;
+    copy_graph.edges = edges;
+    double new_mod = 0.0;
+    while (new_mod < 0.5) {
+        map<pair<V, V>, double> brandes_map = brandes(copy_graph);
+        pair<V, V> max_val;
+        double val = -1;
+        for (auto it = brandes_map.begin(); it != brandes_map.end(); ++it) {
+            if ((it->second) > val) {
+                val = it->second;
+                max_val = it->first;
+            }
+        }
+        copy_graph.remove_edge(max_val.first, max_val.second);
+        new_mod = modularity(copy_graph);
+    }
+    return copy_graph;
 }
 
 // dump the edgelist
