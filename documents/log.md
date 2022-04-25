@@ -15,3 +15,9 @@ Week of Apr 11th
 2. Zhenan and Ling put in a lot of work in defining what the problem we'll be tackling looks like. We all contributed to create our project proposal. Zhenan created a series of shell / python scripts to pre-process our data into a simple text form. Russel has created an initial adjacency list representation in C++ and code for reading in our data into a graph.
 3. The data took more pre-processing than we realized, so that delayed our progress by ~1 day. Other than that, we didn't run into any issues.
 4. We will implement at least one of our algorithms in the coming week, and we hope to be able to interpret the results of applying that algorithm on our data.
+
+Week of April 18th
+1. Our goal for the week was to finish implementing and testing the PageRank algorithm, and to begin implementing the Girvan-Newman algorithm. We've been successful - we have a PageRank implementation which has been tested for several properties of PageRank, and correctness against manually calculated examples. We've also started work on a Girvan-Newman implementation.
+2. Russel and Max worked on the PageRank implementation and testing. Zhenan and Ling started implementing the Girvan-Newman algorithm.
+3. We had to modify our build system to get our project built on EWS machines. Other than that, we didn't run into any problems this week.
+4. We hope to finish the Girvan-Newman implementation next week, and begin writing tests for it. A stretch goal will be to finish testing Girvan-Newman and to start implementing Python bindings.
