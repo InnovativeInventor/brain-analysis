@@ -27,11 +27,18 @@ public:
     std::size_t num_vertices() { return vertices.size(); }
     std::size_t num_edges() { return edges.size(); }
 
-    void map_vertices(std::function<void (V& v)> func);
-    void map_edges(std::function<void (E& e)> func);
+    void map_vertices(std::function<void (V&)>);
+    void map_edges(std::function<void (E&)>);
 
     void normalize();
-    std::unordered_map<V, E> rank(int rounds, E damping);
+    std::unordered_map<V, E> rank(int, E);
+
+    std::unordered_map<std::pair<V, V>, E, custom_hash> brandes();
+    std::unordered_map<V, int> find_communities();
+    E get_m();
+    E get_weighted_k(const V&);
+    E modularity();
+    void girvan_newman();
 
 private:
     struct VertexInfo;
@@ -99,7 +106,7 @@ template <typename V, typename E>
 std::optional<E> Graph<V, E>::get_edge(const V& v1, const V& v2) {
     auto& to_check = vertices.at(v1).deg < vertices.at(v2).deg ? v1 : v2;
     for (auto ve : vertices.at(to_check).vertex_edges) {
-	if (ve.edge_label == std::make_pair(v1, v2)) return edges.at({v1, v2}).e;
+	if (ve == std::make_pair(v1, v2)) return edges.at({v1, v2}).e;
     }
     return {};
 }

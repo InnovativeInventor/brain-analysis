@@ -3,6 +3,7 @@
 #include "brain_serde.h"
 #include "graph.h"
 #include "rank.h"
+#include "girvan_newman.h"
 
 int main(int argc, char** argv) {
     auto voxels = read_in_voxels("data/coords.txt");
@@ -28,5 +29,7 @@ int main(int argc, char** argv) {
 
     std::cout << graph.num_vertices() << " " << graph.num_edges() << "\n";
 
+    graph.girvan_newman();
+    
     return 0;
 }
