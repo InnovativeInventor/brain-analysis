@@ -3,13 +3,13 @@
 #include <stack>
 #include <queue>
 #include <limits>
-// #include <iostream>
-// #include <stdlib.h>
+#include <iostream>
+#include <stdlib.h>
 
 #include "graph.h"
 
-// using std::cout;
-// using std::endl;
+using std::cout;
+using std::endl;
 
 using std::unordered_map;
 using std::pair;
@@ -23,10 +23,11 @@ using std::numeric_limits;
 template <typename V, typename E>
 unordered_map<pair<V, V>, E, custom_hash> Graph<V,E>::brandes(){
     unordered_map<pair<V, V>, E, custom_hash> cb; // final edge betweenness centrality scores
+    
     // fill Cb(edge) with 0
     for (auto it = edges.begin(); it != edges.end(); ++it){
         if (cb.find(std::make_pair((it->first).second, (it->first).first)) == cb.end()){
-            cb[it->first] = 0; 
+            cb[it->first] = 0.0; 
         }
         
     }
@@ -34,80 +35,72 @@ unordered_map<pair<V, V>, E, custom_hash> Graph<V,E>::brandes(){
     //loop through each vertice:
     for (auto it = vertices.begin(); it != vertices.end(); ++it){
         stack<V> S;
-        queue<V> Q;
+        vector<V> Q; // priority queue
         unordered_map<V, vector<V>> Pred;
         unordered_map<V, E> sig_st;
         sig_st[it->first] = 1.0;
         unordered_map<V, E> dist;
         dist[it->first] = 0.0;
 
-        Q.push(it->first);
+        Q.push_back(it->first);
         while(!Q.empty()){
-            V curr_vertex = Q.front();
-            Q.pop();
+            // find the smallest ele, pop from priority Q and push onto stack
+            V curr_vertex;
+            E min_dist = numeric_limits<E>::max();
+            unsigned min_idx = 0;
+            for (unsigned i =0; i < (unsigned) Q.size(); ++i){
+                E curr_dist = (dist.find(Q[i]) == dist.end()) ? 0.0 : dist[Q[i]];
+                if (curr_dist < min_dist){
+                    curr_vertex = Q[i];
+                    min_dist = curr_dist;
+                    min_idx = i;
+                }
+            }
+            Q.erase(Q.begin() + min_idx);
             S.push(curr_vertex);
       
-            // because of weighted edge
-            E min_w = numeric_limits<E>::max();
-            vector<V> shortest_nbr;
             // loop through neighbors of curr_vertex:
             for (pair<V, V>& neighbors : (vertices[curr_vertex]).vertex_edges){
                 V nbr = neighbors.second;
+                E edge_weight = 1.0 - *get_edge(nbr, curr_vertex); // so that higher weight means higher importance/shorted distance
                 if (dist.find(nbr) == dist.end()){
-                    // nbr node first discovered
-                    Q.push(nbr);
-                    E edge_weight = *get_edge(nbr, curr_vertex);
-
+                    // path discovery
                     dist[nbr] = dist[curr_vertex] + edge_weight;
-                    if (edge_weight < min_w){
-                        min_w = edge_weight;
-                        shortest_nbr.clear();
-                        shortest_nbr.push_back(nbr);
-                    } else if (edge_weight == min_w){
-                        // in case we have more than 1 neighbor with the same weight of connection
-                        shortest_nbr.push_back(nbr);
-                    }
+                    Q.push_back(nbr);
+                    sig_st[nbr] = 0.0;
+                    Pred[nbr] = vector<V>();
                 }
-            }
-            //loop through each shortest node (should be only one, but in case there exist next nodes with same weight)
-            for (V & s_nbr: shortest_nbr){
-                // update sig;
-                if (sig_st.find(s_nbr) == sig_st.end()){
-                    sig_st[s_nbr] = sig_st[curr_vertex];
-                } else{
-                    sig_st[s_nbr] += sig_st[curr_vertex];
+                if (dist[nbr] == dist[curr_vertex] + edge_weight){
+                    // path counting.
+                    sig_st[nbr] += sig_st[curr_vertex];
+                    Pred[nbr].push_back(curr_vertex);
                 }
-                // update predecessor
-                if (Pred.find(s_nbr) == Pred.end()){
-                    Pred[s_nbr] = vector<V>();
-                }
-                Pred[s_nbr].push_back(curr_vertex); 
             }
         }
 
         // back trace, start with filling delta with each vertices and a value 0
         unordered_map<V, E> delta_prop;
         for (pair<V, E> p: dist){
-            delta_prop[p.first] = 0;
+            delta_prop[p.first] = 0.0;
         }
 
         while(!S.empty()){
             V curr_node = S.top();
             S.pop();
             for (V pred_nbr: Pred[curr_node]){
-                E c = (sig_st[pred_nbr]/sig_st[curr_node]) * (1 + delta_prop[curr_node]);
+                E c = (sig_st[pred_nbr]/sig_st[curr_node]) * (1.0 + delta_prop[curr_node]);
                 delta_prop[pred_nbr] += c;
+
                 if (cb.find({curr_node, pred_nbr}) != cb.end()){
                     // because we have an undirected graph
-                    cb[{curr_node, pred_nbr}] += c; 
+                    cb[std::make_pair(curr_node, pred_nbr)] += c; 
                 }else{
-                    cb[{pred_nbr, curr_node}] += c;
+                    cb[std::make_pair(pred_nbr, curr_node)] += c;
                 }
                 
             }
         }
     }
-
     return cb;
 }
 
@@ -184,14 +177,16 @@ void Graph<V,E>::get_orig_m(){
 
 // main girvan_newman algorithm.
 template <typename V, typename E>
-void Graph<V,E>::girvan_newman(double max_modularity){
+void Graph<V,E>::girvan_newman(double modularity_thres){
     get_orig_m();// store the original graph's number of edges first (weighted)
-
+    cout << "original m: " << orig_m << endl;
+    
     E new_mod = modularity(); // initial modularity score
-    while (new_mod > max_modularity) {
+    cout << "orig graph mod: " << new_mod << endl;
+    
+    for (int i = 0; i < 50; ++i) {
         // calculate edge betweenness centrality using Brandes Algorithm
         unordered_map<pair<V, V>, E, custom_hash> brandes_map = brandes();
-
         // Find the edge with highest betweenness score
         pair<V, V> max_edge;
         E val = -1.0;
@@ -202,7 +197,7 @@ void Graph<V,E>::girvan_newman(double max_modularity){
             }
         }
         remove_edge(max_edge.first, max_edge.second);
-
         new_mod = modularity(); // recalculate the modularity
+        cout << "new graph mod: " << new_mod << endl;
     }
 }
