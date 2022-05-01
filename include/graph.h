@@ -102,6 +102,7 @@ void Graph<V, E>::remove_edge(const V& v1, const V& v2) {
     --vertices.at(v2).deg;
     vertices.at(v2).vertex_edges.erase(edge.second);
     edges.erase({v1, v2});
+    edges.erase({v2, v1}); 
 }
 
 template <typename V, typename E>
@@ -113,7 +114,9 @@ template <typename V, typename E>
 std::optional<E> Graph<V, E>::get_edge(const V& v1, const V& v2) {
     auto& to_check = vertices.at(v1).deg < vertices.at(v2).deg ? v1 : v2;
     for (auto ve : vertices.at(to_check).vertex_edges) {
-	if (ve == std::make_pair(v1, v2)) return edges.at({v1, v2}).e;
+        if (ve == std::make_pair(v1, v2)|| ve == std::make_pair(v2, v1)) {
+            return edges.at({v1, v2}).e;
+        }
     }
     return {};
 }
