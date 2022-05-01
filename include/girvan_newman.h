@@ -3,8 +3,13 @@
 #include <stack>
 #include <queue>
 #include <limits>
+// #include <iostream>
+// #include <stdlib.h>
 
 #include "graph.h"
+
+// using std::cout;
+// using std::endl;
 
 using std::unordered_map;
 using std::pair;
@@ -13,16 +18,20 @@ using std::stack;
 using std::queue;
 using std::numeric_limits;
 
+
 // calc edge betweenness centrality
 template <typename V, typename E>
 unordered_map<pair<V, V>, E, custom_hash> Graph<V,E>::brandes(){
-    unordered_map<pair<V, V>, E, custom_hash> cb;
+    unordered_map<pair<V, V>, E, custom_hash> cb; // final edge betweenness centrality scores
     // fill Cb(edge) with 0
     for (auto it = edges.begin(); it != edges.end(); ++it){
-        cb[it->first] = 0; 
+        if (cb.find(std::make_pair((it->first).second, (it->first).first)) == cb.end()){
+            cb[it->first] = 0; 
+        }
+        
     }
 
-    //loop through each vertices:
+    //loop through each vertice:
     for (auto it = vertices.begin(); it != vertices.end(); ++it){
         stack<V> S;
         queue<V> Q;
@@ -37,7 +46,8 @@ unordered_map<pair<V, V>, E, custom_hash> Graph<V,E>::brandes(){
             V curr_vertex = Q.front();
             Q.pop();
             S.push(curr_vertex);
-
+      
+            // because of weighted edge
             E min_w = numeric_limits<E>::max();
             vector<V> shortest_nbr;
             // loop through neighbors of curr_vertex:
@@ -46,18 +56,20 @@ unordered_map<pair<V, V>, E, custom_hash> Graph<V,E>::brandes(){
                 if (dist.find(nbr) == dist.end()){
                     // nbr node first discovered
                     Q.push(nbr);
-                    E edge_weight = get_edge(nbr, curr_vertex).value();
+                    E edge_weight = *get_edge(nbr, curr_vertex);
+
                     dist[nbr] = dist[curr_vertex] + edge_weight;
                     if (edge_weight < min_w){
                         min_w = edge_weight;
                         shortest_nbr.clear();
                         shortest_nbr.push_back(nbr);
                     } else if (edge_weight == min_w){
+                        // in case we have more than 1 neighbor with the same weight of connection
                         shortest_nbr.push_back(nbr);
                     }
                 }
             }
-            //loop through each shortest node:
+            //loop through each shortest node (should be only one, but in case there exist next nodes with same weight)
             for (V & s_nbr: shortest_nbr){
                 // update sig;
                 if (sig_st.find(s_nbr) == sig_st.end()){
@@ -73,7 +85,7 @@ unordered_map<pair<V, V>, E, custom_hash> Graph<V,E>::brandes(){
             }
         }
 
-        // back trace, start with filling delta with 0
+        // back trace, start with filling delta with each vertices and a value 0
         unordered_map<V, E> delta_prop;
         for (pair<V, E> p: dist){
             delta_prop[p.first] = 0;
@@ -100,10 +112,9 @@ unordered_map<pair<V, V>, E, custom_hash> Graph<V,E>::brandes(){
 }
 
 
-// find communities
+// find community membership of each node, node belongs to the same community will have the same value
 template <typename V, typename E>
 unordered_map<V, int> Graph<V,E>::find_communities(){
-    // weighted graph: m is also weighted.
     unordered_map<V, int> membership;
     int next_grp = 0;
 
@@ -127,17 +138,8 @@ unordered_map<V, int> Graph<V,E>::find_communities(){
     return membership;
 }
 
-template <typename V, typename E>
-E Graph<V,E>::get_m(){
-    // remember to store it somewhere
-    E total_m = 0.0;
-    for (auto it = edges.begin(); it != edges.end(); ++it){
-        total_m += it->second.e;
-    }
-    return total_m;
-}
 
-
+// weighted degree for a node
 template <typename V, typename E>
 E Graph<V,E>::get_weighted_k(const V& node){
     E sum = 0.0;
@@ -148,47 +150,59 @@ E Graph<V,E>::get_weighted_k(const V& node){
 }
 
 
-// calc modularity
+// calculate modularity
 template <typename V, typename E>
 E Graph<V,E>::modularity(){
-    // weighted graph: m is also weighted.
     unordered_map<V, int> grp_membership = find_communities();
-    E m = get_m();
-
     E mod = 0.0;
-
     for (auto it_i = vertices.begin(); it_i != vertices.end(); ++it_i){
         for (auto it_j = vertices.begin(); it_j != vertices.end(); ++it_j){
             if (it_i->first == it_j->first){break;}
 
             std::optional<E> optional_A = get_edge(it_i->first, it_j->first);
-	    E A = optional_A.value_or(0.0);
-
-            E s = grp_membership.at(it_i->first) == grp_membership.at(it_j->first) ? 1.0 : -1.0;
-            mod += s * (A - (get_weighted_k(it_i->first) * get_weighted_k(it_j->first)/(2.0 * m)));
+	        E A = optional_A.value_or(0.0);
+            E s = grp_membership.at(it_i->first) == grp_membership.at(it_j->first) ? 1.0 : 0.0;
+            mod += s * (A - (get_weighted_k(it_i->first) * get_weighted_k(it_j->first)/(2.0 * orig_m)));
 
         }
     }
-    return mod/(2.0 * m); // possibly 4m?
+    return mod/(2.0 * orig_m);
 
+}
+
+
+// find the original graph's number of edges (weighted)
+template <typename V, typename E>
+void Graph<V,E>::get_orig_m(){
+    E total_m = 0.0;
+    for (auto it = edges.begin(); it != edges.end(); ++it){
+        total_m += it->second.e;
+    }
+    orig_m = total_m/2.0;
 }
 
 
 // main girvan_newman algorithm.
 template <typename V, typename E>
-void Graph<V,E>::girvan_newman(){
-    E new_mod = 0.0;
-    while (new_mod < 0.5) {
+void Graph<V,E>::girvan_newman(double max_modularity){
+    get_orig_m();// store the original graph's number of edges first (weighted)
+
+    E new_mod = modularity(); // initial modularity score
+    while (new_mod > max_modularity) {
+        // calculate edge betweenness centrality using Brandes Algorithm
         unordered_map<pair<V, V>, E, custom_hash> brandes_map = brandes();
-        pair<V, V> max_val;
+
+        // Find the edge with highest betweenness score
+        pair<V, V> max_edge;
         E val = -1.0;
         for (auto it = brandes_map.begin(); it != brandes_map.end(); ++it) {
             if ((it->second) > val) {
                 val = it->second;
-                max_val = it->first;
+                max_edge = it->first;
             }
         }
-        remove_edge(max_val.first, max_val.second);
-        new_mod = modularity();
+        remove_edge(max_edge.first, max_edge.second);
+
+        new_mod = modularity(); // recalculate the modularity
     }
 }

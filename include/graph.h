@@ -6,6 +6,10 @@
 #include <utility>
 #include <list>
 
+#include <iostream>
+using std::cout;
+using std::endl;
+
 struct custom_hash {
     template <typename V1, typename V2>
     std::size_t operator() (const std::pair<V1, V2>& pair) const {
@@ -33,12 +37,13 @@ public:
     void normalize();
     std::unordered_map<V, E> rank(int, E);
 
+    // girvan_newman
     std::unordered_map<std::pair<V, V>, E, custom_hash> brandes();
     std::unordered_map<V, int> find_communities();
-    E get_m();
     E get_weighted_k(const V&);
     E modularity();
-    void girvan_newman();
+    void get_orig_m();
+    void girvan_newman(double max_modularity);
 
 private:
     struct VertexInfo;
@@ -59,6 +64,8 @@ private:
     };
 
     void normalize_edge_weights(const V& v);
+
+    E orig_m; // number of edges in the original graph (weighted)
 };
 
 template <typename V, typename E>
