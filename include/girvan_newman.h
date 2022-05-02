@@ -148,15 +148,19 @@ template <typename V, typename E>
 E Graph<V,E>::modularity(){
     unordered_map<V, int> grp_membership = find_communities();
     E mod = 0.0;
+    unordered_map<V, E> weighted_ks;
+    for (auto v : vertices) {
+	weighted_ks[v.first] = get_weighted_k(v.first);
+    }
     for (auto it_i = vertices.begin(); it_i != vertices.end(); ++it_i){
         for (auto it_j = vertices.begin(); it_j != vertices.end(); ++it_j){
             if (it_i->first == it_j->first){break;}
 
             std::optional<E> optional_A = get_edge(it_i->first, it_j->first);
-	        E A = optional_A.value_or(0.0);
+	    E A = optional_A.value_or(0.0);
             E s = grp_membership.at(it_i->first) == grp_membership.at(it_j->first) ? 1.0 : 0.0;
-            mod += s * (A - (get_weighted_k(it_i->first) * get_weighted_k(it_j->first)/(2.0 * orig_m)));
-
+            mod += s * (A - (weighted_ks.at(it_i->first) * weighted_ks.at(it_j->first)/(2.0 * orig_m)));
+	    
         }
     }
     return mod/(2.0 * orig_m);

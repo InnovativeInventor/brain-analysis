@@ -19,8 +19,6 @@ int main(int argc, char** argv) {
 	graph.insert_edge(edge.e, voxels.at(edge.v1).index, voxels.at(edge.v2).index);
     }
 
-    graph.normalize();
-
     auto ranks = graph.rank(100, 0.85);
 
     for (auto& [v, e]: ranks) {
@@ -29,7 +27,7 @@ int main(int argc, char** argv) {
 
     std::cout << graph.num_vertices() << " " << graph.num_edges() << "\n";
 
-    graph.girvan_newman();
+    graph.girvan_newman(0.0);
     
     return 0;
 }
