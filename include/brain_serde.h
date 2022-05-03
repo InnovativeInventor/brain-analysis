@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+// All the information needed to describe a voxel region of the brain.
 struct Voxel {
     std::size_t index;
     std::string region;
@@ -20,6 +21,7 @@ inline bool operator==(const Voxel& v1, const Voxel& v2) {
 	&& v1.z == v2.z;
 }
 
+// All the information needed to describe the correlation between two voxels.
 struct Edge {
     std::size_t v1;
     std::size_t v2;
