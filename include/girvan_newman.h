@@ -26,12 +26,11 @@ unordered_map<pair<V, V>, E, custom_hash> Graph<V,E>::brandes(){
     
     // fill Cb(edge) with 0
     for (auto it = edges.begin(); it != edges.end(); ++it){
-        if (cb.find(std::make_pair((it->first).second, (it->first).first)) == cb.end()){
+	if (cb.find(std::make_pair((it->first).second, (it->first).first)) == cb.end()){
             cb[it->first] = 0.0; 
         }
-        
     }
-
+    
     //loop through each vertice:
     for (auto it = vertices.begin(); it != vertices.end(); ++it){
         stack<V> S;
@@ -148,15 +147,19 @@ template <typename V, typename E>
 E Graph<V,E>::modularity(){
     unordered_map<V, int> grp_membership = find_communities();
     E mod = 0.0;
+    unordered_map<V, E> weighted_ks;
+    for (auto v : vertices) {
+	weighted_ks[v.first] = get_weighted_k(v.first);
+    }
     for (auto it_i = vertices.begin(); it_i != vertices.end(); ++it_i){
         for (auto it_j = vertices.begin(); it_j != vertices.end(); ++it_j){
             if (it_i->first == it_j->first){break;}
 
             std::optional<E> optional_A = get_edge(it_i->first, it_j->first);
-	        E A = optional_A.value_or(0.0);
+	    E A = optional_A.value_or(0.0);
             E s = grp_membership.at(it_i->first) == grp_membership.at(it_j->first) ? 1.0 : 0.0;
-            mod += s * (A - (get_weighted_k(it_i->first) * get_weighted_k(it_j->first)/(2.0 * orig_m)));
-
+            mod += s * (A - (weighted_ks.at(it_i->first) * weighted_ks.at(it_j->first)/(2.0 * orig_m)));
+	    
         }
     }
     return mod/(2.0 * orig_m);
@@ -177,14 +180,14 @@ void Graph<V,E>::get_orig_m(){
 
 // main girvan_newman algorithm.
 template <typename V, typename E>
-void Graph<V,E>::girvan_newman(double modularity_thres){
+void Graph<V,E>::girvan_newman(E modularity_thres){
     get_orig_m();// store the original graph's number of edges first (weighted)
     cout << "original m: " << orig_m << endl;
     
     E new_mod = modularity(); // initial modularity score
-    cout << "orig graph mod: " << new_mod << endl;
+    cout << "orig graph mod: " << new_mod << "   num edges: " << edges.size() << endl;
     
-    for (int i = 0; i < 50; ++i) {
+    while (new_mod < modularity_thres) {
         // calculate edge betweenness centrality using Brandes Algorithm
         unordered_map<pair<V, V>, E, custom_hash> brandes_map = brandes();
         // Find the edge with highest betweenness score
@@ -196,8 +199,8 @@ void Graph<V,E>::girvan_newman(double modularity_thres){
                 max_edge = it->first;
             }
         }
-        remove_edge(max_edge.first, max_edge.second);
+        remove_directed_edge(max_edge.first, max_edge.second);
         new_mod = modularity(); // recalculate the modularity
-        cout << "new graph mod: " << new_mod << endl;
+        cout << "new graph mod: " << new_mod << "   num edges: " << edges.size() << endl;
     }
 }

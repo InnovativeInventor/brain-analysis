@@ -21,3 +21,9 @@ Week of April 18th
 2. Russel and Max worked on the PageRank implementation and testing. Zhenan and Ling started implementing the Girvan-Newman algorithm.
 3. We had to modify our build system to get our project built on EWS machines. Other than that, we didn't run into any problems this week.
 4. We hope to finish the Girvan-Newman implementation next week, and begin writing tests for it. A stretch goal will be to finish testing Girvan-Newman and to start implementing Python bindings.
+
+Week of April 25th
+1. Our goal for the week was to finish implementing the Girvan-Newman algorithm. We have successfully finished (and started optimizing) our Girvan-Newman implementation.
+2. Zhenan and Ling did most of the work on the Girvan-Newman implementation. Russel and Max helped with the implementation, and did some code cleanup.
+3. We didn't encounter any major problems this week.
+4. We want to create tests for our Girvan-Newman implementation, create Python bindings, and start working on the final writeup.
