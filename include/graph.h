@@ -33,11 +33,11 @@ public:
     void insert_edge(const E&, const V&, const V&);
     void insert_directed_edge(const E&, const V&, const V&);
     void remove_directed_edge(const V&, const V&);
-    unsigned degree(const V&);
+    unsigned degree(const V&) const;
     
-    std::optional<E> get_edge(const V&, const V&);
-    std::size_t num_vertices() { return vertices.size(); }
-    std::size_t num_edges() { return edges.size(); }
+    std::optional<E> get_edge(const V&, const V&) const;
+    std::size_t num_vertices() const { return vertices.size(); }
+    std::size_t num_edges() const { return edges.size(); }
 
     void map_vertices(std::function<void (V&)>);
     void map_edges(std::function<void (E&)>);
@@ -135,7 +135,7 @@ void Graph<V, E>::remove_directed_edge(const V& v1, const V& v2) {
  * Get degree.
  */
 template <typename V, typename E>
-unsigned Graph<V, E>::degree(const V& v) {
+unsigned Graph<V, E>::degree(const V& v) const {
     return vertices.at(v).deg;
 }
 
@@ -143,7 +143,7 @@ unsigned Graph<V, E>::degree(const V& v) {
  * Get an edge weight. Returned in optional because edge might not exist.
  */
 template <typename V, typename E>
-std::optional<E> Graph<V, E>::get_edge(const V& v1, const V& v2) {
+std::optional<E> Graph<V, E>::get_edge(const V& v1, const V& v2) const {
     if (edges.find({v1, v2}) != edges.end())
 	return edges.at({v1, v2}).e;
     else

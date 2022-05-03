@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "graph.h"
+
 // All the information needed to describe a voxel region of the brain.
 struct Voxel {
     std::size_t index;
@@ -37,3 +39,5 @@ inline bool operator==(const Edge& e1, const Edge& e2) {
 std::vector<Voxel> read_in_voxels(const std::string& file_name);
 
 std::vector<Edge> read_in_edges(const std::string& file_name);
+
+void write_out_graph(const std::string& file_name, const Graph<std::size_t, double>& graph, const std::vector<Voxel>& voxels);

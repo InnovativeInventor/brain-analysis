@@ -66,3 +66,17 @@ std::vector<Edge> read_in_edges(const std::string& file_name) {
 
     return edges;
 }
+
+/*
+ * Write out graph in adjacency matrix form for visualization. Non-existant edges have weight 0.0, as there will be not be significant correlation between those voxels.
+ */
+void write_out_graph(const std::string& file_name, const Graph<std::size_t, double>& graph, const std::vector<Voxel>& voxels) {
+    std::fstream fs(file_name, std::ios::out);
+
+    for (Voxel v1 : voxels) {
+	for (Voxel v2 : voxels) {
+	    fs << graph.get_edge(v1.index, v2.index).value_or(0.0) << " ";
+	}
+	fs << "\n";
+    }
+}

@@ -19,6 +19,8 @@ int main(int argc, char** argv) {
 	graph.insert_edge(edge.e, voxels.at(edge.v1).index, voxels.at(edge.v2).index);
     }
 
+    write_out_graph("data/test.txt", graph, voxels);
+
     auto ranks = graph.rank(100, 0.85);
     
     //for (auto& [v, e]: ranks) {
