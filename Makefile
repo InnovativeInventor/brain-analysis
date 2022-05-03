@@ -14,11 +14,15 @@ build/main.o: src/main.cc include/graph.h include/brain_serde.h include/rank.h i
 build/brain_serde.o: src/brain_serde.cc include/brain_serde.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
-test: build/catch.o build/serde.o build/pagerank-manual.o build/pagerank-cycle.o build/brain_serde.o
+test: build/catch.o build/serde.o build/pagerank-manual.o build/pagerank-cycle.o build/brain_serde.o build/graph.o build/girvan_newman.o
 	$(LD) -o $@ $^ $(L_FLAGS)
 build/catch.o: tests/tests-main.cc
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
-build/serde.o: tests/serde.cc include/brain_serde.h
+build/serde.o: tests/serde.cc include/brain_serde.h tests/utils.h
+	$(CXX) $(CXX_FLAGS) -c -o $@ $<
+build/graph.o: tests/graph.cc include/graph.h tests/utils.h
+	$(CXX) $(CXX_FLAGS) -c -o $@ $<
+build/girvan_newman.o: tests/girvan-newman.cc include/girvan_newman.h include/graph.h tests/utils.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 build/pagerank-manual.o: tests/pagerank-manual.cc include/graph.h include/rank.h tests/utils.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
