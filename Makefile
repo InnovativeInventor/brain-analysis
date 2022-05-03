@@ -9,7 +9,7 @@ L_FLAGS=-stdlib=libc++ -lc++abi
 
 main: build/main.o build/brain_serde.o
 	$(LD) -o $@ $^ $(L_FLAGS)
-build/main.o: src/main.cc include/graph.h include/brain_serde.h include/rank.h
+build/main.o: src/main.cc include/graph.h include/brain_serde.h include/rank.h include/girvan_newman.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 build/brain_serde.o: src/brain_serde.cc include/brain_serde.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<

@@ -99,10 +99,7 @@ void Graph<V, E>::remove_edge(const V& v1, const V& v2) {
     const auto& edge = edges.at({v1, v2});
     --vertices.at(v1).deg;
     vertices.at(v1).vertex_edges.erase(edge.first);
-    --vertices.at(v2).deg;
-    vertices.at(v2).vertex_edges.erase(edge.second);
     edges.erase({v1, v2});
-    edges.erase({v2, v1}); 
 }
 
 template <typename V, typename E>

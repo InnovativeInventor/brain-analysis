@@ -26,9 +26,11 @@ unordered_map<pair<V, V>, E, custom_hash> Graph<V,E>::brandes(){
     
     // fill Cb(edge) with 0
     for (auto it = edges.begin(); it != edges.end(); ++it){
-	cb[it->first] = 0.0; 
+	if (cb.find(std::make_pair((it->first).second, (it->first).first)) == cb.end()){
+            cb[it->first] = 0.0; 
+        }
     }
-
+    
     //loop through each vertice:
     for (auto it = vertices.begin(); it != vertices.end(); ++it){
         stack<V> S;
@@ -183,7 +185,7 @@ void Graph<V,E>::girvan_newman(E modularity_thres){
     cout << "original m: " << orig_m << endl;
     
     E new_mod = modularity(); // initial modularity score
-    cout << "orig graph mod: " << new_mod << endl;
+    cout << "orig graph mod: " << new_mod << "   num edges: " << edges.size() << endl;
     
     while (new_mod < modularity_thres) {
         // calculate edge betweenness centrality using Brandes Algorithm
@@ -199,6 +201,6 @@ void Graph<V,E>::girvan_newman(E modularity_thres){
         }
         remove_edge(max_edge.first, max_edge.second);
         new_mod = modularity(); // recalculate the modularity
-        cout << "new graph mod: " << new_mod << endl;
+        cout << "new graph mod: " << new_mod << "   num edges: " << edges.size() << endl;
     }
 }
