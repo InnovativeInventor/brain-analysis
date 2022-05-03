@@ -26,10 +26,7 @@ unordered_map<pair<V, V>, E, custom_hash> Graph<V,E>::brandes(){
     
     // fill Cb(edge) with 0
     for (auto it = edges.begin(); it != edges.end(); ++it){
-        if (cb.find(std::make_pair((it->first).second, (it->first).first)) == cb.end()){
-            cb[it->first] = 0.0; 
-        }
-        
+	cb[it->first] = 0.0; 
     }
 
     //loop through each vertice:
@@ -181,14 +178,14 @@ void Graph<V,E>::get_orig_m(){
 
 // main girvan_newman algorithm.
 template <typename V, typename E>
-void Graph<V,E>::girvan_newman(double modularity_thres){
+void Graph<V,E>::girvan_newman(E modularity_thres){
     get_orig_m();// store the original graph's number of edges first (weighted)
     cout << "original m: " << orig_m << endl;
     
     E new_mod = modularity(); // initial modularity score
     cout << "orig graph mod: " << new_mod << endl;
     
-    for (int i = 0; i < 50; ++i) {
+    while (new_mod < modularity_thres) {
         // calculate edge betweenness centrality using Brandes Algorithm
         unordered_map<pair<V, V>, E, custom_hash> brandes_map = brandes();
         // Find the edge with highest betweenness score

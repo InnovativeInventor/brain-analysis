@@ -20,14 +20,14 @@ int main(int argc, char** argv) {
     }
 
     auto ranks = graph.rank(100, 0.85);
-
-    for (auto& [v, e]: ranks) {
-	std::cout << v << " " << e << " " << graph.degree(v) << std::endl;
-    }
+    
+    //for (auto& [v, e]: ranks) {
+    //    std::cout << v << " " << e << " " << graph.degree(v) << std::endl;
+    //}
 
     std::cout << graph.num_vertices() << " " << graph.num_edges() << "\n";
 
-    graph.girvan_newman(0.0);
+    graph.girvan_newman(0.07);
     
     return 0;
 }

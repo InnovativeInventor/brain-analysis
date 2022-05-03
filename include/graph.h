@@ -43,7 +43,7 @@ public:
     E get_weighted_k(const V&);
     E modularity();
     void get_orig_m();
-    void girvan_newman(double modularity_thres);
+    void girvan_newman(E modularity_thres);
 
 private:
     struct VertexInfo;
