@@ -199,7 +199,7 @@ void Graph<V,E>::girvan_newman(E modularity_thres){
                 max_edge = it->first;
             }
         }
-        remove_edge(max_edge.first, max_edge.second);
+        remove_directed_edge(max_edge.first, max_edge.second);
         new_mod = modularity(); // recalculate the modularity
         cout << "new graph mod: " << new_mod << "   num edges: " << edges.size() << endl;
     }

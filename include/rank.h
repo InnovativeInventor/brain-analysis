@@ -25,7 +25,7 @@ void Graph<V, E>::normalize_edge_weights(const V& v) {
 }
 
 template <typename V, typename E> // E must be floating point
-std::unordered_map<V, E> Graph<V, E>::rank(int rounds, E damping) {
+std::unordered_map<V, E> Graph<V, E>::rank(int rounds, E damping) const {
     size_t size = vertices.size();
     std::unordered_map<V, E> ranks_1, ranks_2, sums;
     for (auto [vertex, vertex_info] : vertices) {
