@@ -154,15 +154,13 @@ E Graph<V,E>::modularity(){
     for (auto it_i = vertices.begin(); it_i != vertices.end(); ++it_i){
         for (auto it_j = vertices.begin(); it_j != vertices.end(); ++it_j){
             if (it_i->first == it_j->first){break;}
-
             std::optional<E> optional_A = get_edge(it_i->first, it_j->first);
-	    E A = optional_A.value_or(0.0);
+	        E A = optional_A.value_or(0.0);
             E s = grp_membership.at(it_i->first) == grp_membership.at(it_j->first) ? 1.0 : 0.0;
             mod += s * (A - (weighted_ks.at(it_i->first) * weighted_ks.at(it_j->first)/(2.0 * orig_m)));
-	    
         }
     }
-    return mod/(2.0 * orig_m);
+    return mod/orig_m;
 
 }
 
@@ -182,7 +180,7 @@ void Graph<V,E>::get_orig_m(){
 template <typename V, typename E>
 void Graph<V,E>::girvan_newman(E modularity_thres){
     get_orig_m();// store the original graph's number of edges first (weighted)
-    cout << "original m: " << orig_m << endl;
+    cout << "original scaling factor m: " << orig_m << endl;
     
     E new_mod = modularity(); // initial modularity score
     cout << "orig graph mod: " << new_mod << "   num edges: " << edges.size() << endl;
@@ -200,6 +198,7 @@ void Graph<V,E>::girvan_newman(E modularity_thres){
             }
         }
         remove_edge(max_edge.first, max_edge.second);
+        remove_edge(max_edge.second, max_edge.first);
         new_mod = modularity(); // recalculate the modularity
         cout << "new graph mod: " << new_mod << "   num edges: " << edges.size() << endl;
     }
