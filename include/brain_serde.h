@@ -1,5 +1,6 @@
 #pragma once
     
+#include <unordered_map>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -41,3 +42,5 @@ std::vector<Voxel> read_in_voxels(const std::string& file_name);
 std::vector<Edge> read_in_edges(const std::string& file_name);
 
 void write_out_graph(const std::string& file_name, const Graph<std::size_t, double>& graph, const std::vector<Voxel>& voxels);
+
+void write_out_ranks(const std::string& file_name, const std::unordered_map<std::size_t, double>& ranks, const std::vector<Voxel>& voxels);
