@@ -6,6 +6,10 @@
 #include <utility>
 #include <list>
 
+#include <iostream>
+using std::cout;
+using std::endl;
+
 struct custom_hash {
     template <typename V1, typename V2>
     std::size_t operator() (const std::pair<V1, V2>& pair) const {
@@ -27,11 +31,19 @@ public:
     std::size_t num_vertices() { return vertices.size(); }
     std::size_t num_edges() { return edges.size(); }
 
-    void map_vertices(std::function<void (V& v)> func);
-    void map_edges(std::function<void (E& e)> func);
+    void map_vertices(std::function<void (V&)>);
+    void map_edges(std::function<void (E&)>);
 
     void normalize();
-    std::unordered_map<V, E> rank(int rounds, E damping);
+    std::unordered_map<V, E> rank(int, E);
+
+    // girvan_newman
+    std::unordered_map<std::pair<V, V>, E, custom_hash> brandes();
+    std::unordered_map<V, int> find_communities();
+    E get_weighted_k(const V&);
+    E modularity();
+    void get_orig_m();
+    void girvan_newman(E modularity_thres);
 
 private:
     struct VertexInfo;
@@ -52,6 +64,8 @@ private:
     };
 
     void normalize_edge_weights(const V& v);
+
+    E orig_m; // number of edges in the original graph (weighted)
 };
 
 template <typename V, typename E>
@@ -85,8 +99,6 @@ void Graph<V, E>::remove_edge(const V& v1, const V& v2) {
     const auto& edge = edges.at({v1, v2});
     --vertices.at(v1).deg;
     vertices.at(v1).vertex_edges.erase(edge.first);
-    --vertices.at(v2).deg;
-    vertices.at(v2).vertex_edges.erase(edge.second);
     edges.erase({v1, v2});
 }
 
@@ -97,9 +109,10 @@ unsigned Graph<V, E>::degree(const V& v) {
 
 template <typename V, typename E>
 std::optional<E> Graph<V, E>::get_edge(const V& v1, const V& v2) {
-    auto& to_check = vertices.at(v1).deg < vertices.at(v2).deg ? v1 : v2;
-    for (auto ve : vertices.at(to_check).vertex_edges) {
-	if (ve.edge_label == std::make_pair(v1, v2)) return edges.at({v1, v2}).e;
+    for (auto ve : vertices.at(v1).vertex_edges) {
+        if (ve == std::make_pair(v1, v2)) {
+            return edges.at({v1, v2}).e;
+        }
     }
     return {};
 }
