@@ -1,9 +1,13 @@
 #pragma once
     
+#include <unordered_map>
 #include <fstream>
 #include <string>
 #include <vector>
 
+#include "graph.h"
+
+// All the information needed to describe a voxel region of the brain.
 struct Voxel {
     std::size_t index;
     std::string region;
@@ -20,6 +24,7 @@ inline bool operator==(const Voxel& v1, const Voxel& v2) {
 	&& v1.z == v2.z;
 }
 
+// All the information needed to describe the correlation between two voxels.
 struct Edge {
     std::size_t v1;
     std::size_t v2;
@@ -35,3 +40,7 @@ inline bool operator==(const Edge& e1, const Edge& e2) {
 std::vector<Voxel> read_in_voxels(const std::string& file_name);
 
 std::vector<Edge> read_in_edges(const std::string& file_name);
+
+void write_out_graph(const std::string& file_name, const Graph<std::size_t, double>& graph, const std::vector<Voxel>& voxels);
+
+void write_out_ranks(const std::string& file_name, const std::unordered_map<std::size_t, double>& ranks, const std::vector<Voxel>& voxels);
