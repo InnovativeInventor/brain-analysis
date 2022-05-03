@@ -21,7 +21,7 @@ struct custom_hash {
 };
 
 /*
- * Graph class templatized over vertex and edge data.
+ * Graph class templatized over vertex and edge data. Edge weight *MUST* be a floating point value (usually double). We would use concepts but we ran into compiler issues on EWS.
  */
 template <typename V, typename E>
 class Graph {
