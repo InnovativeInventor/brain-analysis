@@ -21,16 +21,11 @@ int main(int argc, char** argv) {
 
     auto ranks = graph.rank(100, 0.85);
     
-    write_out_graph("data/test_graph.txt", graph, voxels);
-    write_out_ranks("data/test_ranks.txt", ranks, voxels);
-
-    //for (auto& [v, e]: ranks) {
-    //    std::cout << v << " " << e << " " << graph.degree(v) << std::endl;
-    //}
-
     std::cout << graph.num_vertices() << " " << graph.num_edges() << "\n";
 
     graph.girvan_newman(0.3);
+
+    std::cout << graph.num_vertices() << " " << graph.num_edges() << "\n";
     
     return 0;
 }

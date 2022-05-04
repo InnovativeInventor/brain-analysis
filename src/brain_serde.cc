@@ -75,7 +75,7 @@ void write_out_graph(const std::string& file_name, const Graph<std::size_t, doub
 
     for (Voxel v1 : voxels) {
 	for (Voxel v2 : voxels) {
-	    fs << graph.get_edge(v1.index, v2.index).value_or(0.0) << " ";
+	    fs << std::to_string(graph.get_edge(v1.index, v2.index).value_or(0.0)) << " ";
 	}
 	fs << "\n";
     }
@@ -85,6 +85,6 @@ void write_out_ranks(const std::string& file_name, const std::unordered_map<std:
     std::fstream fs(file_name, std::ios::out);
 
     for (Voxel v : voxels) {
-	fs << ranks.at(v.index) << " ";
+	fs << std::to_string(ranks.at(v.index)) << " ";
     }
 }
