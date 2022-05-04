@@ -88,7 +88,8 @@ TEST_CASE( "Graph writable test 1", "[graph][io]" ) {
     for (std::size_t i = 0; i < num_voxels; ++i) {
 	for (std::size_t j = 0; j < num_voxels; ++j) {
 	    adj_mat[i][j] = static_cast<double>((std::hash<std::size_t>()(i) ^ std::hash<std::size_t>()(j)) % num_voxels);
-	    graph.insert_directed_edge(adj_mat[i][j], j, i);
+	    if (adj_mat[i][j] != 0.0)
+		graph.insert_directed_edge(adj_mat[i][j], j, i);
 	}
     }
 
@@ -103,6 +104,28 @@ TEST_CASE( "Graph writable test 1", "[graph][io]" ) {
 	    correct << std::to_string(adj_mat[i][j]) << " ";
 	}
 	correct << "\n";
+    }
+    REQUIRE( buf.str() == correct.str() );
+}
+
+TEST_CASE( "Ranks writable test 1", "[graph][io]" ) {
+    std::size_t num_voxels = GENERATE(3, 10, 20);
+    std::vector<Voxel> voxels;
+    for (std::size_t i = 0; i < num_voxels; ++i)
+	voxels.push_back({i, "", 0.0, 0.0, 0.0});
+
+    std::unordered_map<std::size_t, double> ranks;
+    for (std::size_t i = 0; i < num_voxels; ++i)
+	ranks[i] = static_cast<double>(std::hash<std::size_t>()(i) % num_voxels);
+
+    write_out_ranks("tests/data/test_write_rank1.txt", ranks, voxels);
+    std::fstream fs("tests/data/test_write_rank1.txt", std::ios::in);
+    std::stringstream buf;
+    buf << fs.rdbuf();
+
+    std::stringstream correct;
+    for (std::size_t i = 0; i < num_voxels; ++i) {
+	correct << std::to_string(ranks[i]) << " ";
     }
     REQUIRE( buf.str() == correct.str() );
 }

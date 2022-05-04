@@ -85,6 +85,6 @@ void write_out_ranks(const std::string& file_name, const std::unordered_map<std:
     std::fstream fs(file_name, std::ios::out);
 
     for (Voxel v : voxels) {
-	fs << ranks.at(v.index) << " ";
+	fs << std::to_string(ranks.at(v.index)) << " ";
     }
 }
