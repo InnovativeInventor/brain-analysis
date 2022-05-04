@@ -128,7 +128,7 @@ TEST_CASE( "Girvan_newman removing the edge with highest centrality" "[graph][gi
     graph.get_orig_m();
     double prev_modularity = graph.modularity();
 
-    graph.girvan_newman(0.5);
+    graph.girvan_newman(0.5, false);
 
     double new_modularity = graph.modularity();
 

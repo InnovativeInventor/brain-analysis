@@ -62,7 +62,7 @@ public:
     /*
      * Run Girvan-Newman on this graph. Destructive (this graph object changes after calling this function);
      */
-    void girvan_newman(E modularity_thres);
+    void girvan_newman(E modularity_thres, bool verbose);
 
 private:
     struct VertexInfo;

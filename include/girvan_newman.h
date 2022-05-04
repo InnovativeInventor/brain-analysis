@@ -178,12 +178,11 @@ void Graph<V,E>::get_orig_m(){
 
 // main girvan_newman algorithm.
 template <typename V, typename E>
-void Graph<V,E>::girvan_newman(E modularity_thres){
+void Graph<V,E>::girvan_newman(E modularity_thres, bool verbose){
     get_orig_m();// store the original graph's number of edges first (weighted)
-    //cout << "original scaling factor m: " << orig_m << endl;
     
     E new_mod = modularity(); // initial modularity score
-    //cout << "orig graph mod: " << new_mod << "   num edges: " << edges.size() << endl;
+    if (verbose) cout << "Original Modularity: " << new_mod << "   Original Number of Edges: " << edges.size() << endl;
     
     while (new_mod < modularity_thres) {
         // calculate edge betweenness centrality using Brandes Algorithm
@@ -200,6 +199,6 @@ void Graph<V,E>::girvan_newman(E modularity_thres){
         remove_directed_edge(max_edge.first, max_edge.second);
         remove_directed_edge(max_edge.second, max_edge.first);
         new_mod = modularity(); // recalculate the modularity
-        //cout << "new graph mod: " << new_mod << "   num edges: " << edges.size() << endl;
+	if (verbose) cout << "New Modularity: " << new_mod << ", with termination threshold of " << modularity_thres <<  "   New Number of Edges: " << edges.size() << endl;
     }
 }
