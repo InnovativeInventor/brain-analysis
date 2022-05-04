@@ -31,8 +31,8 @@ build/girvan_newman_tests.o: tests/girvan_newman_tests.cc include/graph.h includ
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 exe: main
-	./main data/coords.txt data/img_edge_list.txt data/results/img_orig.txt data/results/img_ranks.txt data/results/img_girvan_newman.txt 0.14
-	./main data/coords.txt data/pcp_edge_list.txt data/results/pcp_orig.txt data/results/pcp_ranks.txt data/results/pcp_girvan_newman.txt 0.14
+	./main data/coords.txt data/img_edge_list.txt data/results/img_orig.txt data/results/img_ranks.txt data/results/img_girvan_newman.txt 0.3
+	./main data/coords.txt data/pcp_edge_list.txt data/results/pcp_orig.txt data/results/pcp_ranks.txt data/results/pcp_girvan_newman.txt 0.3
 exe_test: test
 	./test
 
