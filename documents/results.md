@@ -5,7 +5,13 @@
 ### PageRank
 
 ### Girvan-Newman
+We chose the Girvan-Newman algorithm for finding community structure. First, we used the Brandes algorithm to compute the edge betweenness centrality. Betweenness centrality for an edge refers to the proportion of shortest paths that goes through the edge. For each node, we use a BFS algorithm to find the shortest paths between the node and all the other nodes. The edge betweenness centrality score is then calculated by counting the number of times the edge appears in the path between the nodes divided by the total number of paths between the nodes. In other words, an edge with a high betweenness centrality score would mean that the edge is often passed through, thus having a higher influence.
 
+Next, we also computed the modularity score, which is often used as a measure for how good a clustering is. We used modularity score to optimize community detection. The modularity score is calculated by summing the probability that the edge is within a cluster minus the probability a random edge is within a certain cluster. High modularity indicates a larger number of edges within the group that we expect by chance.
+
+Using the Girvan-Newman algorithm, once we compute the edge betweenness centrality scores for all the edges, we remove the edge with the highest betweenness centrality. After each edge removal, we recompute the modularity score. We continue removing the edges, from the edges with the highest betweenness centrality, until we reach a modularity score of -1.0.
+
+To test the correctness of the algorithm, we created a few smaller graphs and manually calculated the betweenness centrality score. We made sure that our algorithm starts by deleting the edge with the highest betweenness centrality.
 
 
 ## The answer to leading question
