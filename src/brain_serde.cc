@@ -75,7 +75,7 @@ void write_out_graph(const std::string& file_name, const Graph<std::size_t, doub
 
     for (Voxel v1 : voxels) {
 	for (Voxel v2 : voxels) {
-	    fs << graph.get_edge(v1.index, v2.index).value_or(0.0) << " ";
+	    fs << std::to_string(graph.get_edge(v1.index, v2.index).value_or(0.0)) << " ";
 	}
 	fs << "\n";
     }
