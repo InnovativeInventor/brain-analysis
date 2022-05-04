@@ -9,7 +9,7 @@ We chose the Girvan-Newman algorithm for finding community structure. First, we 
 
 Next, we also computed the modularity score, which is often used as a measure of how good the clustering is. We used modularity score to optimize community detection. The modularity score is calculated by summing the probability that the edge is within a cluster minus the probability a random edge is within a certain cluster. High modularity indicates a larger number of edges within the group we expect by chance.
 
-Using the Girvan-Newman algorithm, once we compute the edge betweenness centrality scores for all the edges, we remove the edge with the highest betweenness centrality. After each edge removal, we recompute the modularity score. We continue removing the edges, from the edges with the highest betweenness centrality, until we reach a modularity score of -1.0.
+Using the Girvan-Newman algorithm, once we compute the edge betweenness centrality scores for all the edges, we remove the edge with the highest betweenness centrality. After each edge removal, we recompute the modularity score. We continue removing the edges, from the edges with the highest betweenness centrality, until we reach a modularity score of 0.3.
 
 To test the correctness of the algorithms, first, we made sure that our algorithm calculates the modularity score and assigns the clusters correctly. We created a small graph and calculated the modularity score by hand and made sure that it matches the score calculated by our algorithm. We also checked to make sure that nodes within the same cluster have the same community membership value.
 
