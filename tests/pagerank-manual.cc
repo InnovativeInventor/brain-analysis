@@ -26,7 +26,28 @@ TEST_CASE( "Manually constructed trivial pagerank test" "[graph][pagerank]" ) {
 	REQUIRE_SIMILAR( ranks_norm.at(i), ranks.at(i) );
 }
 
-TEST_CASE( "Manually constructed trivial convergence pagerank test" "[graph][pagerank]" ) {
+TEST_CASE( "Manually constructed trivial convergence pagerank test 1" "[graph][pagerank]" ) {
+    Graph<std::size_t, double> graph;
+
+    graph.insert_vertex(0);
+    graph.insert_vertex(1);
+
+    graph.insert_directed_edge(1.0, 0, 1);
+
+    auto ranks1 = graph.rank(1, 0.7);
+    auto ranks2 = graph.rank(2, 0.7);
+    auto ranks3 = graph.rank(10, 0.7);
+
+    REQUIRE_SIMILAR( ranks1[0], 0.3 );
+    REQUIRE_SIMILAR( ranks2[0], 0.3 );
+    REQUIRE_SIMILAR( ranks3[0], 0.3 );
+
+    REQUIRE( ranks1[1] > ranks2[1] );
+    REQUIRE_SIMILAR( ranks2[1], ranks3[1] );
+    REQUIRE_SIMILAR( ranks3[1], 0.51 );
+}
+
+TEST_CASE( "Manually constructed trivial convergence pagerank test 2" "[graph][pagerank]" ) {
     Graph<std::size_t, double> graph;
 
     graph.insert_vertex(0);

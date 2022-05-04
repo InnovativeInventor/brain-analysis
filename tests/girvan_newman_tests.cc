@@ -132,7 +132,7 @@ TEST_CASE( "Girvan_newman removing the edge with highest centrality" "[graph][gi
 
     double new_modularity = graph.modularity();
 
-    //check whether modularity rised;
+    //check whether modularity rose;
     REQUIRE(new_modularity > 0.5);
     REQUIRE(new_modularity > prev_modularity);
 

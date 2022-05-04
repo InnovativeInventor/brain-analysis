@@ -4,7 +4,7 @@
 #include "graph.h"
 #include "rank.h"
 
-TEST_CASE( "Graph construction 1", "[graph]" ) {
+TEST_CASE( "Specific graph construction", "[graph]" ) {
     Graph<std::size_t, double> graph;
 
     graph.insert_vertex(0);
@@ -30,7 +30,7 @@ TEST_CASE( "Graph construction 1", "[graph]" ) {
     REQUIRE( counter == 8.0 );
 }
 
-TEST_CASE( "Graph construction 2", "[graph]" ) {
+TEST_CASE( "Non-specific graph construction", "[graph]" ) {
     size_t graph_size = GENERATE(10, 30, 100);
 
     Graph<std::size_t, double> graph;
