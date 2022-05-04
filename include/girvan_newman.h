@@ -136,7 +136,7 @@ template <typename V, typename E>
 E Graph<V,E>::get_weighted_k(const V& node){
     E sum = 0.0;
     for(std::pair<V, V> p : vertices.at(node).vertex_edges){
-        sum += get_edge(p.first, p.second).value();
+        sum += get_edge(p.first, p.second).value_or(0.0);
     }
     return sum;
 }

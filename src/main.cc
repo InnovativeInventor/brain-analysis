@@ -6,15 +6,16 @@
 #include "girvan_newman.h"
 
 int main(int argc, char** argv) {
-    if (argc != 6) {
-	std::cerr << "Usage: ./main <input voxels> <input edges> <output ranks> <output girvan-newman> <girvan-newman modularity threshold>" << "\n";
+    if (argc != 7) {
+	std::cerr << "Usage: ./main <input voxels> <input edges> <output original graph> <output ranks> <output girvan-newman> <girvan-newman modularity threshold>" << "\n";
 	return 1;
     }
     std::string input_voxels(argv[1]);
     std::string input_edges(argv[2]);
-    std::string output_ranks(argv[3]);
-    std::string output_girvan_newman(argv[4]);
-    double girvan_newman_mod(std::stod(argv[5]));
+    std::string output_orig_graph(argv[3]);
+    std::string output_ranks(argv[4]);
+    std::string output_girvan_newman(argv[5]);
+    double girvan_newman_mod(std::stod(argv[6]));
     
     auto voxels = read_in_voxels(input_voxels);
     auto edges = read_in_edges(input_edges);
@@ -29,6 +30,8 @@ int main(int argc, char** argv) {
     for (Edge edge : edges) {
 	graph.insert_edge(edge.e, voxels.at(edge.v1).index, voxels.at(edge.v2).index);
     }
+
+    write_out_graph(output_orig_graph, graph, voxels);
 
     std::cout << "Running PageRank.\n";
     auto ranks = graph.rank(100, 0.85);
