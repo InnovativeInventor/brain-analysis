@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set>
 using std::cout;
 using std::endl;
 using std::make_pair;
@@ -25,6 +26,43 @@ TEST_CASE( "find_communities able to detect subgraphs" "[graph][girvan_newman]" 
     REQUIRE(communities.at(0) != communities.at(1));
     REQUIRE(communities.at(0) != communities.at(2));
     REQUIRE(communities.at(1) == communities.at(2));
+}
+
+TEST_CASE( "find_communities able to detect subgraphs, non-specific version" "[graph][girvan_newman]" ) {
+    size_t comm_size = GENERATE(3, 5, 10);
+    
+    Graph<std::size_t, double> graph;
+
+    for (std::size_t i = 0; i < comm_size; ++i) {
+	for (std::size_t j = 0; j < comm_size; ++j) {
+	    graph.insert_vertex(i * comm_size + j);
+	}
+    }
+
+    for (std::size_t i = 0; i < comm_size; ++i) {
+	for (std::size_t j = 0; j < comm_size; ++j) {
+	    for (std::size_t k = 0; k < comm_size; ++k) {
+		graph.insert_directed_edge(1.0,
+					   i * comm_size + j,
+					   i * comm_size + k);
+	    }
+	}
+    }
+
+    std::unordered_set<int> unique;
+
+    auto communities = graph.find_communities();
+    for (std::size_t i = 0; i < comm_size; ++i) {
+	for (std::size_t j = 0; j < comm_size; ++j) {
+	    for (std::size_t k = 0; k < comm_size; ++k) {
+		REQUIRE( communities.at(i * comm_size + j) ==
+			 communities.at(i * comm_size + k) );
+		unique.insert(communities.at(i * comm_size + j));
+	    }
+	}
+    }
+
+    REQUIRE( unique.size() == comm_size );
 }
 
 TEST_CASE( "modularity calculates correct mod" "[graph][girvan_newman]" ) {
