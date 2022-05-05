@@ -10,7 +10,7 @@ To build the main executable, simply run:
 make
 ```
 
-To run the main executable on the input data with the same parameters as we did on real-world data, simple run:
+To run the main executable on the input data with the same parameters as we did on real-world data, simply run:
 ```
 make exe
 ```
@@ -39,5 +39,15 @@ make test
 ./test
 ```
 
-## Analysis Workflow
-TODO: fill this out
+We test the following:
+- Serialization / deserialization code (deserialize input voxels / edges, serialize output ranks / graph)
+- Graph code (all graph functions in our adjacency list implementation)
+- PageRank code (manually constructed examples that we've calculated the results of by hand, also test invariants on non-specificly sized graphs)
+- Girvan-Newman code (test helper functions for Girvan-Newman, test main Girvan-Newman function, all with manually constructed examples)
+
+We use the catch2 testing framework, and the following are tags that you can test specifically:
+- io
+- graph
+- construction
+- pagerank
+- girvan_newman

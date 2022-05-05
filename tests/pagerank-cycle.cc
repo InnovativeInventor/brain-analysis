@@ -58,13 +58,13 @@ Graph<std::size_t, double> construct_cycle_graph(size_t cycle_size, double weigh
     return graph;
 }
 
-TEST_CASE( "Cycle digraph is constructable", "[graph][construction][directed]" ) {
+TEST_CASE( "Cycle digraph is constructable", "[graph][construction]" ) {
     size_t cycle_size = GENERATE(10, 100);
     double weight = GENERATE(0.0, 0.5, 1.0);
     construct_cycle_digraph(cycle_size, weight);
 }
 
-TEST_CASE( "Cycle graph is constructable with insert_edge()", "[graph][construction][undirected]" ) {
+TEST_CASE( "Cycle graph is constructable with insert_edge()", "[graph][construction]" ) {
     size_t cycle_size = GENERATE(10, 100);
     double weight = GENERATE(0.0, 0.5, 1.0);
     construct_cycle_graph(cycle_size, weight);
@@ -72,7 +72,7 @@ TEST_CASE( "Cycle graph is constructable with insert_edge()", "[graph][construct
 
 // The cycle graph is vertex-transitive, so the pagerank value of each vertex
 // should reflect this symmetry. 
-TEST_CASE( "Cycle graph is vertex-transitive with pagerank", "[pagerank][sym_cycle_graph]" ) {
+TEST_CASE( "Cycle graph is vertex-transitive with pagerank", "[pagerank][graph]" ) {
     size_t cycle_size = GENERATE(10, 100);
     double weight = GENERATE(0.1, 0.5, 1.0);
     auto graph = construct_cycle_graph(cycle_size, weight);
@@ -88,7 +88,7 @@ TEST_CASE( "Cycle graph is vertex-transitive with pagerank", "[pagerank][sym_cyc
 
 // The directed cycle graph is also vertex-transitive, so the pagerank value of each vertex
 // should also reflect this symmetry. 
-TEST_CASE( "Cycle digraph is vertex-transitive with pagerank", "[pagerank][sym_cycle_digraph]" ) {
+TEST_CASE( "Cycle digraph is vertex-transitive with pagerank", "[pagerank][graph]" ) {
     size_t cycle_size = GENERATE(10, 100);
     double weight = GENERATE(0.1, 0.5, 1.0);
     auto graph = construct_cycle_digraph(cycle_size, weight);
