@@ -20,3 +20,6 @@ Lastly, we also tested our Girvan-Newman algorithm. The Girvan-Newman algorithm 
 
 ## The answer to leading question
 
+### PageRank
+Based on our results from the PageRank algorithm, we managed to detect the brain regions that are important in both Imagery (i.e. imagining natural scenes) and Perception (i.e. viewing natural scenes) conditions. Interestingly, we found that the important brain areas are different between these two conditions. In the Imagery condition, the most important brain areas are located towards the back of the brain, whereas in the Perception condition, the most important brain areas are located at the middle part of the brain. 
+
