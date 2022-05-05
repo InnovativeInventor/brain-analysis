@@ -60,7 +60,7 @@ public:
     void get_orig_m();
 
     /*
-     * Run Girvan-Newman on this graph. Destructive (this graph object changes after calling this function);
+     * Run Girvan-Newman on this graph. Destructive (this graph object changes after calling this function).
      */
     void girvan_newman(E modularity_thres, bool verbose);
 

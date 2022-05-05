@@ -81,6 +81,9 @@ void write_out_graph(const std::string& file_name, const Graph<std::size_t, doub
     }
 }
 
+/*
+ * Write out ranks for each voxel for visualization.
+ */
 void write_out_ranks(const std::string& file_name, const std::unordered_map<std::size_t, double>& ranks, const std::vector<Voxel>& voxels) {
     std::fstream fs(file_name, std::ios::out);
 

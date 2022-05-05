@@ -60,7 +60,7 @@ std::unordered_map<V, E> Graph<V, E>::rank(int rounds, E damping) const {
 
 	// Peform core PageRank calculation.
 	for (auto& [vertex, vertex_info] : vertices) {
-	    for (auto ve : vertex_info.vertex_edges) {
+	    for (auto& ve : vertex_info.vertex_edges) {
 	        auto& edge = edges.at({ve.first, ve.second});
 		ranks_2.at(ve.second) += ranks_1.at(ve.first) * edge.e / sums.at(vertex);
 	    }

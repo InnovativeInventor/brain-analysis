@@ -76,3 +76,28 @@ TEST_CASE( "Non-specific graph construction", "[graph]" ) {
     }
     REQUIRE_SIMILAR( norm_counter, (double) (graph_size) );
 }
+
+TEST_CASE( "Cycle graph traversal", "[graph]" ) {
+    size_t graph_size = GENERATE(10, 30, 100);
+
+    Graph<std::size_t, double> graph;
+    
+    for (std::size_t i = 0; i < graph_size; ++i) {
+	graph.insert_vertex(i);
+    }
+
+    for (std::size_t i = 0; i + 1 < graph_size; ++i) {
+	graph.insert_directed_edge(1.0, i, i + 1);
+    }
+    graph.insert_directed_edge(1.0, graph_size - 1, 0);
+
+    std::size_t v = 0, counter = 0;
+    do {
+	auto e = graph.get_edge(v, (v + 1) % graph_size);
+	REQUIRE( e != std::nullopt );
+	REQUIRE( e.value_or(0.0) == 1.0 );
+	v = (v + 1) % graph_size;
+	++counter;
+    } while (v != 0);
+    REQUIRE( counter == graph_size );
+}
