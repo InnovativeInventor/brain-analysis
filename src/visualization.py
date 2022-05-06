@@ -38,62 +38,6 @@ def _coords2ls(coords: dict, adjust_factor) -> list:
     return coords_ls
 
 
-def plot_con_mat(adj_mat, coords: dict, title: str, fname:str):
-    labels = []
-    ticks = []
-    for key in coords.keys():
-        prev_len = len(labels)
-        labels += ["" for _ in range(len(coords[key]))]
-        labels[prev_len + len(coords[key]) // 2] = key
-        ticks.append(len(coords[key]) + (0 if len(ticks) == 0 else ticks[-1]))
-
-    fig, ax = plt.subplots(1, 1, figsize=(6, 5))
-    im = ax.imshow(
-        adj_mat,
-        cmap='Reds',
-        vmin=0,
-        vmax=np.max(adj_mat)
-    )
-    fig.colorbar(im, orientation='vertical')
-
-    for i in ticks[:-1]:
-        plt.axhline(y=i, color="black", linewidth=1)
-        plt.axvline(x=i, color="black", linewidth=1)
-
-    ax.set_title(title)
-    tick_lb = np.arange(adj_mat.shape[0])
-    ax.set_xticks(tick_lb)  # snp.arange(len(category_ls)))
-    ax.set_yticks(tick_lb)  # np.arange(len(category_ls)))
-
-    ax.set_xticklabels(labels, rotation=30)
-    ax.set_yticklabels(labels)
-
-    plt.tight_layout()
-
-    plt.savefig(fname)
-    # plt.show()
-
-
-def plot_vertices_brain(rank_scores, coords: dict, title):
-    # plot vertices with different ranks
-    coords_ls = _coords2ls(coords, 0)
-
-    cmap = plt.cm.Reds
-    norm = clr.Normalize()
-    rank_color = cmap(norm(rank_scores))
-    rank_size = MinMaxScaler((0, 60)).fit_transform(rank_scores.reshape(-1, 1)).flatten()
-
-    pos_brain = [-27, -80, 15]
-    mid_brain = [-34, -39, -9]
-    display = plotting.plot_anat("../data/template.nii", cut_coords=mid_brain, title=title + " (middle_slice)")
-    display.add_markers(coords_ls, marker_size=rank_size, marker_color=rank_color)
-    plotting.show()
-
-    display = plotting.plot_anat("../data/template.nii", cut_coords=pos_brain, title=title + " (posterior_slice)")
-    display.add_markers(coords_ls, marker_size=rank_size, marker_color=rank_color)
-    # plotting.show()
-
-
 def plot_vertex_brain_3D(rank_scores, coords: dict, save_f:str):
     coords_ls = _coords2ls(coords, 5)
 
@@ -108,7 +52,7 @@ def plot_vertex_brain_3D(rank_scores, coords: dict, save_f:str):
     view.save_as_html(save_f)
 
 
-def plot_con_brain_3D(adj_mat, coords: dict, save_f: str):
+def plot_connectivity_brain_3D(adj_mat, coords: dict, save_f: str):
     # plot interactive 3D brain
     coords_ls = _coords2ls(coords, 5)
     palette = ["blue", "green", "black", "purple", "aqua"]
@@ -125,10 +69,7 @@ def plot_con_brain_3D(adj_mat, coords: dict, save_f: str):
 
 def main():
     ##=================== load data
-    graph_orig_img = "../data/results/img_orig.txt"
     graph_img = "../data/results/img_girvan_newman.txt"
-
-    graph_orig_pcp = "../data/results/pcp_orig.txt"
     graph_pcp = "../data/results/pcp_girvan_newman.txt"
 
     rank_img = "../data/results/img_ranks.txt"
@@ -137,10 +78,7 @@ def main():
     coords_ls = "../data/coords.txt"
 
     # things needed:
-    adj_mat_orig_img = load_adjcency_mat(graph_orig_img)  # the adjacency matrix for imagery original
     adj_mat_img = load_adjcency_mat(graph_img)  # the adjacency matrix for imagery after GN
-
-    adj_mat_orig_pcp = load_adjcency_mat(graph_orig_pcp)  # the adjacency matrix for imagery
     adj_mat_pcp = load_adjcency_mat(graph_pcp)  # the adjacency matrix for perception
 
     rank_arr_img = load_vertex_rank(rank_img)  # an array of rank scores corresponding to the vertices for imagery
@@ -149,23 +87,14 @@ def main():
     coords = load_coords(coords_ls)  # the coordinates of all vertices, can be from the original coords.txt
 
     ##==================== plot stuff
-    # connectivity matrix
-    plot_con_mat(adj_mat_orig_img, coords, "Connectivity matrix original: imagery", "../data/results/vis_conmat_orig_img.png")
-    plot_con_mat(adj_mat_img, coords, "Connectivity matrix after GN: imagery", "../data/results/vis_conmat_img.png")
 
-    plot_con_mat(adj_mat_orig_pcp, coords, "Connectivity matrix original: perception", "../data/results/vis_conmat_orig_pcp.png")
-    plot_con_mat(adj_mat_pcp, coords, "Connectivity matrix after GN: perception", "../data/results/vis_conmat_pcp.png")
-
-    # rank
-    # plot_vertices_brain(rank_arr_pcp, coords, "Vertices with ranks: perception")
+    # rank visualization
     plot_vertex_brain_3D(rank_arr_pcp, coords, "../data/results/vis_rank_pcp.html")
     plot_vertex_brain_3D(rank_arr_img, coords, "../data/results/vis_rank_img.html")
 
-    plot_con_brain_3D(adj_mat_pcp, coords, "../data/results/vis_graph_pcp.html")
-    plot_con_brain_3D(adj_mat_img, coords, "../data/results/vis_graph_img.html")
-
-    plot_con_brain_3D(adj_mat_orig_pcp, coords, "../data/results/vis_graph_orig_pcp.html")
-    plot_con_brain_3D(adj_mat_orig_img, coords, "../data/results/vis_graph_orig_img.html")
+    # connectivity visualization
+    plot_connectivity_brain_3D(adj_mat_pcp, coords, "../data/results/vis_graph_pcp.html")
+    plot_connectivity_brain_3D(adj_mat_img, coords, "../data/results/vis_graph_img.html")
 
 
 if __name__ == "__main__":
