@@ -2,6 +2,8 @@
 
 We are interested in how the human reacts differently when we are imagining natural scene images versus viewing the actual images themselves. The brain activity dataset was obtained from a public OpenNeuro database (Shen, 2018). We extracted the connectivity between different regions of the brain for the 2 conditions: imagining pictures vs. viewing images, by calculating the Pearson's R correlation for the activity of these regions as time series. The brain regions that we are interested in forms the human scene network that was proposed to encode the concept as well as spatial informations embedded in natural scenes (Baldassano, 2016).
 
+<img width="302" alt="Screen Shot 2022-05-05 at 11 07 09 PM" src="https://user-images.githubusercontent.com/70292345/167065308-aade18e6-602d-45c8-8b5b-a86c404eedb3.png">
+
 We obtained 2 graphs corresponding to brain's reaction under the 2 conditions and performed 2 algorithms, PageRank and Girvan-Newman on both to make a comparison. Based on the known property of the general structure of the brain that more anterior (in the front) part are usually responsible for more abstract and higher level of processing, we hypothesize that we may see higher importance and stronger community structure in the anterior regions when people are imagining pictures compared to when they are viewing the same set of pictures.
 
 ## Methods (Algorithms Used)
