@@ -71,7 +71,7 @@ def plot_con_mat(adj_mat, coords: dict, title: str, fname:str):
     plt.tight_layout()
 
     plt.savefig(fname)
-    plt.show()
+    # plt.show()
 
 
 def plot_vertices_brain(rank_scores, coords: dict, title):
@@ -91,7 +91,7 @@ def plot_vertices_brain(rank_scores, coords: dict, title):
 
     display = plotting.plot_anat("../data/template.nii", cut_coords=pos_brain, title=title + " (posterior_slice)")
     display.add_markers(coords_ls, marker_size=rank_size, marker_color=rank_color)
-    plotting.show()
+    # plotting.show()
 
 
 def plot_vertex_brain_3D(rank_scores, coords: dict, save_f:str):
@@ -153,7 +153,7 @@ def main():
     plot_con_mat(adj_mat_orig_img, coords, "Connectivity matrix original: imagery", "../data/results/vis_conmat_orig_img.png")
     plot_con_mat(adj_mat_img, coords, "Connectivity matrix after GN: imagery", "../data/results/vis_conmat_img.png")
 
-    plot_con_mat(adj_mat_orig_pcp, coords, "Connectivity matrix after GN: perception", "../data/results/vis_conmat_orig_pcp.png")
+    plot_con_mat(adj_mat_orig_pcp, coords, "Connectivity matrix original: perception", "../data/results/vis_conmat_orig_pcp.png")
     plot_con_mat(adj_mat_pcp, coords, "Connectivity matrix after GN: perception", "../data/results/vis_conmat_pcp.png")
 
     # rank
