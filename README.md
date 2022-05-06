@@ -5,12 +5,12 @@ See [/documents/proposal.md](/documents/proposal.md) for the leading question an
 The C++ code is located in the ``src``, ``include``, and ``tests`` directories. The graph and algorithm code is in ``src`` and ``include``, and the testing code is in the ``tests`` directory. Our pre-processed input data is in the ``data`` directory. The pre-processed input data are the ``coords.txt``, ``img_edge_list.txt``, and ``pcp_edge_list.txt`` files. These files represent the voxel regions and coordinates in the brain, the imagination correlations between voxels, and the perception correlations between voxels, respectively. ``coords.txt`` forms a common set of vertices across both cases, and the edge lists represent the case-specific edge weights. Most documents are located in the ```documents``` folder. This includes the report, which is at [/documents/results.md](/documents/results.md).
 
 ## Running
-To build the main executable, simply run:
+To build the main executable, run:
 ```
 make
 ```
 
-To run the main executable on the input data with the same parameters as we did on real-world data, simply run:
+To run the main executable on the input data with the same parameters as we did on real-world data, run:
 ```
 make exe
 ```
@@ -27,8 +27,14 @@ where the following describe the arguments:
 - output girvan-newman: output file where Girvan-Newman results are written to
 - girvan-newman modularity threshold: threshold at which to stop Girvan-Newman calculations (0.3-0.8 is what's used in literature, should be between 0 and 1)
 
+Running `make exe` to reproduce our results is [fully equivalent](https://github-dev.cs.illinois.edu/cs225-sp22/llchong2-zhenans2-rarbore2-myfan3/blob/d1b58a97e88690fd942f8e15c05f10595cddb93f/Makefile#L33-L35) to running `./main` with the following arguments:
+```
+./main data/coords.txt data/img_edge_list.txt data/results/img_orig.txt data/results/img_ranks.txt data/results/img_girvan_newman.txt 0.3
+./main data/coords.txt data/pcp_edge_list.txt data/results/pcp_orig.txt data/results/pcp_ranks.txt data/results/pcp_girvan_newman.txt 0.3
+```
+
 ## Testing
-To run our test suite, simply run:
+To run our test suite, run:
 ```
 make exe_test
 ```
