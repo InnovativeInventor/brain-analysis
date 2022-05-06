@@ -38,6 +38,43 @@ def _coords2ls(coords: dict, adjust_factor) -> list:
     return coords_ls
 
 
+# Plot the connectivity matrix
+def plot_con_mat(adj_mat, coords: dict, title: str, fname:str):
+    labels = []
+    ticks = []
+    for key in coords.keys():
+        prev_len = len(labels)
+        labels += ["" for _ in range(len(coords[key]))]
+        labels[prev_len + len(coords[key]) // 2] = key
+        ticks.append(len(coords[key]) + (0 if len(ticks) == 0 else ticks[-1]))
+
+    fig, ax = plt.subplots(1, 1, figsize=(6, 5))
+    im = ax.imshow(
+        adj_mat,
+        cmap='Reds',
+        vmin=0,
+        vmax=np.max(adj_mat)
+    )
+    fig.colorbar(im, orientation='vertical')
+
+    for i in ticks[:-1]:
+        plt.axhline(y=i, color="black", linewidth=1)
+        plt.axvline(x=i, color="black", linewidth=1)
+
+    ax.set_title(title)
+    tick_lb = np.arange(adj_mat.shape[0])
+    ax.set_xticks(tick_lb)  # snp.arange(len(category_ls)))
+    ax.set_yticks(tick_lb)  # np.arange(len(category_ls)))
+
+    ax.set_xticklabels(labels, rotation=30)
+    ax.set_yticklabels(labels)
+
+    plt.tight_layout()
+
+    plt.savefig(fname)
+    # plt.show()
+
+# Plot the 3D brain for PageRank score results.
 def plot_vertex_brain_3D(rank_scores, coords: dict, save_f:str):
     coords_ls = _coords2ls(coords, 5)
 
@@ -48,10 +85,10 @@ def plot_vertex_brain_3D(rank_scores, coords: dict, save_f:str):
 
     # plot interactive 3D brain
     view = plotting.view_markers(coords_ls, marker_size=rank_size, marker_color=rank_color)
-    # view.open_in_browser()
     view.save_as_html(save_f)
 
 
+# Plot the 3D brain for connectivity results.
 def plot_connectivity_brain_3D(adj_mat, coords: dict, save_f: str):
     # plot interactive 3D brain
     coords_ls = _coords2ls(coords, 5)
@@ -62,8 +99,8 @@ def plot_connectivity_brain_3D(adj_mat, coords: dict, save_f: str):
         node_color += [palette[i] for _ in range(len(val))]
         i += 1
 
-    view = plotting.view_connectome(adj_mat, coords_ls, node_color=node_color, edge_threshold=0, edge_cmap="bwr", linewidth=2.0)
-    # view.open_in_browser()
+    view = plotting.view_connectome(adj_mat, coords_ls, node_color=node_color, edge_threshold=0,
+                                    edge_cmap="bwr", linewidth=2.0)
     view.save_as_html(save_f)
 
 
@@ -77,7 +114,6 @@ def main():
 
     coords_ls = "../data/coords.txt"
 
-    # things needed:
     adj_mat_img = load_adjcency_mat(graph_img)  # the adjacency matrix for imagery after GN
     adj_mat_pcp = load_adjcency_mat(graph_pcp)  # the adjacency matrix for perception
 
@@ -87,12 +123,15 @@ def main():
     coords = load_coords(coords_ls)  # the coordinates of all vertices, can be from the original coords.txt
 
     ##==================== plot stuff
-
     # rank visualization
     plot_vertex_brain_3D(rank_arr_pcp, coords, "../data/results/vis_rank_pcp.html")
     plot_vertex_brain_3D(rank_arr_img, coords, "../data/results/vis_rank_img.html")
 
-    # connectivity visualization
+    # connectivity visualization - connectivity matrix
+    plot_con_mat(adj_mat_img, coords, "Connectivity matrix after GN: imagery", "../data/results/vis_conmat_img.png")
+    plot_con_mat(adj_mat_pcp, coords, "Connectivity matrix after GN: perception", "../data/results/vis_conmat_pcp.png")
+
+    # connectivity visualization - 3D brain
     plot_connectivity_brain_3D(adj_mat_pcp, coords, "../data/results/vis_graph_pcp.html")
     plot_connectivity_brain_3D(adj_mat_img, coords, "../data/results/vis_graph_img.html")
 
