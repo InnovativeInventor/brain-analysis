@@ -27,3 +27,9 @@ Week of April 25th
 2. Zhenan and Ling did most of the work on the Girvan-Newman implementation. Russel and Max helped with the implementation, and did some code cleanup.
 3. We didn't encounter any major problems this week.
 4. We want to create tests for our Girvan-Newman implementation, create Python bindings, and start working on the final writeup.
+
+Week of May 2nd
+1. This week was mostly wrap-up and polishing work, with the goal of having a presentable final project by the deadline.
+2. In particular, we created fairly comprehensive tests for the Girvan-Newman algorithm implementation. This includes subgraph detection, some hand calculated tests, and checking for various invariants (like the Girvan-Newman algo will remove the edge with the highest centrality for a particular graph). Zhenan and Russel worked on these tests.
+2. Zhenan also worked on implmeneting some auxilliary plotting code (in Python) to supplement our final project submission with some pretty visuals. This also allows us to give some meaning and broader interpretation to the final project results. You can see our conclusions [here](https://github-dev.cs.illinois.edu/cs225-sp22/llchong2-zhenans2-rarbore2-myfan3/blob/main/documents/results.md#results-and-conclusions-the-answer-to-leading-question)
+3. Everyone worked on updating the documentation and polishing various tests.
