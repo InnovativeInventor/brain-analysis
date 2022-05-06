@@ -82,7 +82,7 @@ TEST_CASE( "Cycle graph is vertex-transitive with pagerank", "[pagerank][graph]"
 
     auto first_rank = ranks[0];
     for (auto& [_, e]: ranks) {
-	REQUIRE_SIMILAR (e, first_rank);
+      REQUIRE (e == first_rank);
     }
 }
 
@@ -99,6 +99,6 @@ TEST_CASE( "Cycle digraph is vertex-transitive with pagerank", "[pagerank][graph
 
     auto first_rank = ranks[0];
     for (auto& [_, e]: ranks) {
-	REQUIRE_SIMILAR (e, first_rank);
+      REQUIRE (e == first_rank);
     }
 }
