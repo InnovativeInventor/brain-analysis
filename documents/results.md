@@ -71,6 +71,19 @@ In figure 3, the dots with different colors represent a vertex, or a specific po
 
 Another interesting observation is that the intertalk between the memory areas in the 2 hemispheres is more anterior for the imagery condition. This corresponds to our hypothesis that perhaps when we are imagining, more anterior parts are involved and working harder to help us remember what the images look like. However, there aren't any significant community structures in the hippocampus, PPA and RSC area in the middle of the brain. This could be due to the fact that the images used in the experiment are not all strict scene images, so the actcivities in these regions may not be prominent enough to emerge. In addition, the way that the brain activity data were obtained could result in higher signal loss in the middle bottom portion of the brain, exactly where the hippocampus is in our case.
 
+### Interactive Visualization of Results
+
+Since our results are inherently 3-dimensional and photos can only show a 2-dimesnional slice of our results, we highly recommend interacting our results in a browser. You can zoom in and pan around the brain and see the correlated and uncorrelated regions of the brain from arbitrary angles. This can be viewed locally at the filepath we provided. We have also hosted them on a web server as they are too large for GitHub to display a preview of.
+
+- [/data/results/vis_graph_img.html](http://cs225-final-project.max.fan/vis_graph_img.html): our output from the Girvan-Newman algorithm for imagining scenes.
+
+- [/data/results/vis_graph_pcp.html](http://cs225-final-project.max.fan/vis_graph_pcp.html): our output from the Girvan-Newman algorithm for percieving scenes.
+
+- [/data/results/vis_rank_img.html](http://cs225-final-project.max.fan/vis_rank_img.html): our output from the PageRank algorithm for imagining scenes.
+
+- [/data/results/vis_rank_pcp.html](http://cs225-final-project.max.fan/vis_rank_pcp.html): our output from the PageRank algorithm for percieving scenes.
+
+
 ### General Conclusion
 
 To summarize, we used PageRank algorithm to examine the importance of each brain region in the context of the scene network connectome and Givan-Newman algorithm to detect the potential community structures. We compared the results between the imagining versus perceiving condition to address the question of how the connectivity differs and whether the difference aligns with theoretical inference. Our results answered our leading questions. We observed that the disribution of PageRank scores are more even in the imagery condition and the same visual area communities can be detected in the imagery condition, suggesting that when we need to imagine or generate visual images from within, the multiple brain areas had to work harder collaboratively compared to when we only need to passively view the imagines. The differential location of the intertalk between hippocampus: anterior for imagery versus posterior for perception also aligns with our hypothesis for more anterior involvement in the imagery condition.
