@@ -4,6 +4,11 @@ See [/documents/proposal.md](/documents/proposal.md) for the leading question an
 ## Directory Structure
 The C++ code is located in the ``src``, ``include``, and ``tests`` directories. The graph and algorithm code is in ``src`` and ``include``, and the testing code is in the ``tests`` directory. Our pre-processed input data is in the ``data`` directory. The pre-processed input data are the ``coords.txt``, ``img_edge_list.txt``, and ``pcp_edge_list.txt`` files. These files represent the voxel regions and coordinates in the brain, the imagination correlations between voxels, and the perception correlations between voxels, respectively. ``coords.txt`` forms a common set of vertices across both cases, and the edge lists represent the case-specific edge weights. Most documents are located in the ```documents``` folder. This includes the report, which is at [/documents/results.md](/documents/results.md).
 
+## Visualizations
+Here is a link to our video presentation on Google Drive: [https://drive.google.com/file/d/1Kw3xhOIBkqIjx52e55vL-cNjkgboE2CC/view?usp=sharing](https://drive.google.com/file/d/1Kw3xhOIBkqIjx52e55vL-cNjkgboE2CC/view?usp=sharing).
+Here is a link to our video presentation on Mediaspace:
+[https://mediaspace.illinois.edu/media/t/1_0dss4z2s](https://mediaspace.illinois.edu/media/t/1_0dss4z2s).
+
 ## Running
 To build the main executable, run:
 ```
