@@ -8,6 +8,7 @@ The C++ code is located in the ``src``, ``include``, and ``tests`` directories. 
 Here is a link to our video presentation on Google Drive: [https://drive.google.com/file/d/1Kw3xhOIBkqIjx52e55vL-cNjkgboE2CC/view?usp=sharing](https://drive.google.com/file/d/1Kw3xhOIBkqIjx52e55vL-cNjkgboE2CC/view?usp=sharing).
 Here is a link to our video presentation on Mediaspace:
 [https://mediaspace.illinois.edu/media/t/1_0dss4z2s](https://mediaspace.illinois.edu/media/t/1_0dss4z2s).
+The visualizations html files can be reproduce by directly running [/src/visualization.py](/src/visualization.py), although there are 4 public packages required: nilearn, sklearn, numpy and matplotlib, all of which can be installed using pip.
 
 ## Running
 To build the main executable, run:
