@@ -10,6 +10,16 @@ Here is a link to our video presentation on Mediaspace:
 [https://mediaspace.illinois.edu/media/t/1_0dss4z2s](https://mediaspace.illinois.edu/media/t/1_0dss4z2s).
 The visualizations html files can be reproduce by directly running [/src/visualization.py](/src/visualization.py), although there are 4 public packages required: nilearn, sklearn, numpy and matplotlib, all of which can be installed using pip.
 
+Since our results are inherently 3-dimensional and photos can only show a 2-dimesnional slice of our results, we highly recommend interacting our results in a browser. You can zoom in and pan around the brain and see the correlated and uncorrelated regions of the brain from arbitrary angles. This can be viewed locally at the filepath we provided. We have also hosted them on a web server as they are too large for GitHub to display a preview of.
+
+- [/data/results/vis_rank_img.html](http://cs225-final-project.max.fan/vis_rank_img.html): our output from the PageRank algorithm for imagining scenes.
+
+- [/data/results/vis_rank_pcp.html](http://cs225-final-project.max.fan/vis_rank_pcp.html): our output from the PageRank algorithm for percieving scenes.
+
+- [/data/results/vis_graph_img.html](http://cs225-final-project.max.fan/vis_graph_img.html): our output from the Girvan-Newman algorithm for imagining scenes.
+
+- [/data/results/vis_graph_pcp.html](http://cs225-final-project.max.fan/vis_graph_pcp.html): our output from the Girvan-Newman algorithm for percieving scenes.
+
 ## Running
 To build the main executable, run:
 ```
